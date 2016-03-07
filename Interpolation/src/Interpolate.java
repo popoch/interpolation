@@ -13,8 +13,8 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 
 public class Interpolate {
 	public JFrame frame;
@@ -25,6 +25,7 @@ public class Interpolate {
 	public float right_data_loss_rate_during_video_play = 0.0f;
 	int count2 = 0;
 	float y = 0f;
+	public JTextField File_Location;
 	
 	public Interpolate() {
 		run();
@@ -50,31 +51,44 @@ public class Interpolate {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				JFileChooser JFC = new JFileChooser("F:/160119/160118/Male");
+				JFileChooser JFC = new JFileChooser("C:/Users/Administrator/Desktop");
 				JFC.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
 				JFC.setMultiSelectionEnabled(false);
 				JFC.showOpenDialog(frame);
 				analyze(JFC.getSelectedFile());
+				
+				String temp_location = String.valueOf(JFC.getSelectedFile());
+				Data.location = temp_location.split("\\\\", -1);
+				
+				File_Location = new JTextField();
+				String temp = Data.location[0]+"\\"+Data.location[1]+"\\"+Data.location[2]+"\\"
+							  +Data.location[3]+"\\"+Data.location[4]+"\\"+Data.location[5]+"\\"+"Systemlog"+"\\"+"systemlog.csv";
+				File_Location.setText(temp);
+				File_Location.setBounds(15, 55, 350, 25);
+				frame.getContentPane().add(File_Location);
+				File_Location.setColumns(10);
+				File file = new File(temp);
+				analyze2(file);
 			}
 		});
 		importer.setBounds(15, 15, 150, 25);
 		frame.getContentPane().add(importer);
 //----------------------------------------------------------------------------------------//		
-		JButton importer2 = new JButton("Log Import");
-		importer2.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				JFileChooser JFC2 = new JFileChooser("F:/160119/160118/Male");
-				JFC2.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
-				JFC2.setMultiSelectionEnabled(false);
-				JFC2.showOpenDialog(frame);
-				analyze2(JFC2.getSelectedFile());
-			}
-		});
-		importer2.setBounds(15, 55, 150, 25);
-		frame.getContentPane().add(importer2);
+//		JButton importer2 = new JButton("Log Import");
+//		importer2.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent arg0) {
+//				// TODO Auto-generated method stub
+//				JFileChooser JFC2 = new JFileChooser("C:/Users/Administrator/Desktop");
+//				JFC2.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
+//				JFC2.setMultiSelectionEnabled(false);
+//				JFC2.showOpenDialog(frame);
+//				analyze2(JFC2.getSelectedFile());
+//			}
+//		});
+//		importer2.setBounds(15, 55, 150, 25);
+//		frame.getContentPane().add(importer2);
 //----------------------------------------------------------------------------------------//		
 		JButton graph = new JButton("Graph");
 		graph.addActionListener(new ActionListener() {

@@ -35,4 +35,5 @@ public class Data {
 	
 	public static int currentPoint2 = 0;
 	public static Drawing DF = new Drawing();
+	public static String[] location;
 }

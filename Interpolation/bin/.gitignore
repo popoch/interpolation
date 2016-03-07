@@ -1,5 +1,4 @@
 /Data.class
-/DistanceFromModel.class
 /Drawing$DrawingPanel.class
 /Drawing.class
 /Interpolate$1.class
@@ -9,11 +8,5 @@
 /Interpolate$5.class
 /Interpolate$6.class
 /Interpolate.class
-/ModelGenerator.class
-/ModelMatcher.class
 /Npupil.class
 /PointL.class
-/PointR.class
-/Pupil.class
-/Start$1.class
-/Start.class
