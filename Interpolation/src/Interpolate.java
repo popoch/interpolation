@@ -39,7 +39,7 @@ public class Interpolate {
 		
 		
 		frame = new JFrame();
-		frame.setBounds(width/2-250, height/2-150, 500, 300);
+		frame.setBounds(width/2-250, height/2-150, 600, 300);
 		frame.setResizable(false);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -62,9 +62,9 @@ public class Interpolate {
 				
 				File_Location = new JTextField();
 				String temp = Data.location[0]+"\\"+Data.location[1]+"\\"+Data.location[2]+"\\"
-							  +Data.location[3]+"\\"+Data.location[4]+"\\"+Data.location[5]+"\\"+"Systemlog"+"\\"+"systemlog.csv";
+							  +Data.location[3]+"\\"+Data.location[4]+"\\"+Data.location[5]+"\\"+Data.location[6]+"\\"+"Systemlog"+"\\"+"systemlog.csv";
 				File_Location.setText(temp);
-				File_Location.setBounds(15, 55, 350, 25);
+				File_Location.setBounds(15, 55, 570, 25);
 				frame.getContentPane().add(File_Location);
 				File_Location.setColumns(10);
 				File file = new File(temp);
