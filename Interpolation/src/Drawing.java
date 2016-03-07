@@ -1,10 +1,12 @@
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.awt.geom.Line2D;
 
 
@@ -29,26 +31,42 @@ public class Drawing extends JFrame {
 		int flag = 0;
 		
 		protected void paintComponent(Graphics g) {
+
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.setColor(Color.WHITE);
 			g.fillRect(0, 0, this.getWidth(), this.getHeight());
 			
 			g.setColor(Color.BLACK);
-			g.drawString("Source File : " + Data.file_name, 50, this.getHeight()-30);
+			g.drawString("Source File 1 : " + Data.location[5] + "_" + Data.file_name, 50, this.getHeight()-30);
+			g.drawString("Source File 2 : " + Data.location[5] + "_" + "systemlog.csv", 50, this.getHeight()-15);
 			
 			g.drawLine(0, this.getHeight()/4, this.getWidth(), this.getHeight()/4);
 			g.drawLine(0, this.getHeight()/4*3, this.getWidth(), this.getHeight()/4*3);
 			g.drawLine(10, 0, 10, this.getHeight());
+			g.drawString("Arbitrary Unit", this.getWidth()-100, this.getHeight()/4 - 200);
+			
+			g.setColor(Color.LIGHT_GRAY);
+			for(int i = -10; i <= 10; i++) {
+				if(i == 0) {
+					g.drawString(String.valueOf(i), 0, this.getHeight()/4 - i*20);
+					g.drawString(String.valueOf(i), 0, this.getHeight()/4*3 - i*20);
+				} else {
+					g.drawString(String.valueOf(i), 0, this.getHeight()/4 - i*20);
+					g.drawString(String.valueOf(i), 0, this.getHeight()/4*3 - i*20);
+					g.drawLine(0, this.getHeight()/4 - i*20, this.getWidth(), this.getHeight()/4 - i*20);
+					g.drawLine(0, this.getHeight()/4*3 - i*20, this.getWidth(), this.getHeight()/4*3 - i*20);
+				}
+			}
 			
 			//30, this.getHeight()/4*3
 			
 			for(int count = 1; count < Data.nor_pupildata.size(); count++) {
 				int x1 = Math.round((float)(count - 1) * 1900 /((float) Data.nor_pupildata.size()) + 10);
-				float y1 = this.getHeight()/4 - (Float.valueOf(Data.nor_pupildata.get(count-1).left))*30;
+				float y1 = this.getHeight()/4 - (Float.valueOf(Data.nor_pupildata.get(count-1).left))*20;
 				
 				int x2 = Math.round(((float)count) * 1900 /((float) Data.nor_pupildata.size()) + 10);
-				float y2 = this.getHeight()/4 - (Float.valueOf(Data.nor_pupildata.get(count).left))*30;
+				float y2 = this.getHeight()/4 - (Float.valueOf(Data.nor_pupildata.get(count).left))*20;
 								
 				
 				if(flag == 1) {
@@ -64,10 +82,10 @@ public class Drawing extends JFrame {
 				}
 								
 				int x3 = Math.round((float)(count - 1) * 1900 /((float) Data.nor_pupildata.size()) + 10);
-				float y3 = this.getHeight()/4*3 - (Float.valueOf(Data.nor_pupildata.get(count-1).right))*30;
+				float y3 = this.getHeight()/4*3 - (Float.valueOf(Data.nor_pupildata.get(count-1).right))*20;
 				
 				int x4 = Math.round(((float)count) * 1900 /((float) Data.nor_pupildata.size()) + 10);
-				float y4 = this.getHeight()/4*3 - (Float.valueOf(Data.nor_pupildata.get(count).right))*30;
+				float y4 = this.getHeight()/4*3 - (Float.valueOf(Data.nor_pupildata.get(count).right))*20;
 								
 				
 				if(flag == 1) {
@@ -82,11 +100,21 @@ public class Drawing extends JFrame {
 					g.drawString("Right Pupil "+ String.valueOf(Data.nor_pupildata.get(count-1).right), 20, this.getHeight()/4*3-200);
 				}
 				if(Data.nor_pupildata.get(count).timestamp.equalsIgnoreCase(Data.log_video_time_start)) {
-					g.drawLine(x4, 0, x4, this.getHeight()/4*3);		
+					g.drawLine(x4, 0, x4, this.getHeight());
+					g.drawString("Video Start", x4, this.getHeight()/4 - 200);
+					
+					String time_temp[] = Data.nor_pupildata.get(count).timestamp.split(":|\\.", -1);
+					String time_text_start = String.valueOf(time_temp[1])+"min "+String.valueOf(time_temp[2])+"sec "+String.valueOf(time_temp[3]);
+					g.drawString(time_text_start, x4, this.getHeight()/4 - 160);
 					flag = 1;
 				}
 				if(Data.nor_pupildata.get(count).timestamp.equalsIgnoreCase(Data.log_video_time_end)) {
-					g.drawLine(x4, 0, x4, this.getHeight()/4*3);
+					g.drawLine(x4, 0, x4, this.getHeight());
+					g.drawString("Video End", x4, this.getHeight()/4 - 200);
+					
+					String time_temp[] = Data.nor_pupildata.get(count).timestamp.split(":|\\.", -1);
+					String time_text_end = String.valueOf(time_temp[1])+"min "+String.valueOf(time_temp[2])+"sec "+String.valueOf(time_temp[3]);
+					g.drawString(time_text_end, x4, this.getHeight()/4 - 160);
 					flag = 0;
 				}
 			}

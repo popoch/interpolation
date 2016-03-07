@@ -136,7 +136,7 @@ public class Interpolate {
 				try {
 				// TODO Auto-generated method stub
 				JFileChooser JFC = new JFileChooser("/Users/Administrator/Desktop");
-				JFC.setSelectedFile(new File("RMK_" + Data.file_name));
+				JFC.setSelectedFile(new File("RMK_" + Data.location[5]));
 				int interval = JFC.showSaveDialog(null);
 				int dif_min = 50;
 				int dif_min2 = 50;
