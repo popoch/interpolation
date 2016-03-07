@@ -45,7 +45,9 @@ public class Drawing extends JFrame {
 			g.drawLine(0, this.getHeight()/4, this.getWidth(), this.getHeight()/4);
 			g.drawLine(0, this.getHeight()/4*3, this.getWidth(), this.getHeight()/4*3);
 			g.drawLine(20, 0, 20, this.getHeight());
-			g.drawString("Arbitrary Unit", this.getWidth()-100, this.getHeight()/4 - 200);
+			g.drawString("Arbitrary Unit", this.getWidth()-200, this.getHeight()/4 - 240);
+			g.drawString("Name : " + Data.location[5], this.getWidth()-200, this.getHeight()/4 - 220);
+			g.drawString("Gender : " + Data.location[4], this.getWidth()-200, this.getHeight()/4 - 200);
 			
 			g.setColor(Color.LIGHT_GRAY);
 			for(int i = -10; i <= 10; i++) {
@@ -112,7 +114,7 @@ public class Drawing extends JFrame {
 					
 					String time_temp[] = Data.nor_pupildata.get(count).timestamp.split(":|\\.", -1);
 					String time_text_start = String.valueOf(time_temp[1])+"min "+String.valueOf(time_temp[2])+"sec "+String.valueOf(time_temp[3]);
-					g.drawString(time_text_start, x4, this.getHeight()/4 - 160);
+					g.drawString(time_text_start, x4, this.getHeight()/4 - 180);
 					flag = 1;
 				}
 				if(Data.nor_pupildata.get(count).timestamp.equalsIgnoreCase(Data.log_video_time_end)) {
@@ -121,7 +123,7 @@ public class Drawing extends JFrame {
 					
 					String time_temp[] = Data.nor_pupildata.get(count).timestamp.split(":|\\.", -1);
 					String time_text_end = String.valueOf(time_temp[1])+"min "+String.valueOf(time_temp[2])+"sec "+String.valueOf(time_temp[3]);
-					g.drawString(time_text_end, x4, this.getHeight()/4 - 160);
+					g.drawString(time_text_end, x4, this.getHeight()/4 - 180);
 					flag = 0;
 				}
 				if(count == Data.nor_pupildata.size()-1) {
