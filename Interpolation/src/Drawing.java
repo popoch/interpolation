@@ -3,6 +3,7 @@ import javax.swing.JFrame;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -43,7 +44,7 @@ public class Drawing extends JFrame {
 			
 			g.drawLine(0, this.getHeight()/4, this.getWidth(), this.getHeight()/4);
 			g.drawLine(0, this.getHeight()/4*3, this.getWidth(), this.getHeight()/4*3);
-			g.drawLine(10, 0, 10, this.getHeight());
+			g.drawLine(20, 0, 20, this.getHeight());
 			g.drawString("Arbitrary Unit", this.getWidth()-100, this.getHeight()/4 - 200);
 			
 			g.setColor(Color.LIGHT_GRAY);
@@ -62,10 +63,10 @@ public class Drawing extends JFrame {
 			//30, this.getHeight()/4*3
 			
 			for(int count = 1; count < Data.nor_pupildata.size(); count++) {
-				int x1 = Math.round((float)(count - 1) * 1900 /((float) Data.nor_pupildata.size()) + 10);
+				int x1 = Math.round((float)(count - 1) * 1890 /((float) Data.nor_pupildata.size()) + 20);
 				float y1 = this.getHeight()/4 - (Float.valueOf(Data.nor_pupildata.get(count-1).left))*20;
 				
-				int x2 = Math.round(((float)count) * 1900 /((float) Data.nor_pupildata.size()) + 10);
+				int x2 = Math.round(((float)count) * 1890 /((float) Data.nor_pupildata.size()) + 20);
 				float y2 = this.getHeight()/4 - (Float.valueOf(Data.nor_pupildata.get(count).left))*20;
 								
 				
@@ -78,13 +79,16 @@ public class Drawing extends JFrame {
 				
 				g.setColor(Color.RED);
 				if(count == 1) {
-					g.drawString("Left Pupil "+ String.valueOf(Data.nor_pupildata.get(count-1).left), 20, this.getHeight()/4-200);
+					g.drawString("Mean of Left Pupil : "+ String.valueOf(Data.pupil_mean_left), 22, this.getHeight()/4-240);
+					g.drawString("Mean of Normalized Left Pupil : "+ String.valueOf(Data.left_nor_data_mean), 22, this.getHeight()/4-220);
+					g.drawString("Left Data Loss Rate (Overall) : "+ String.valueOf(Data.left_loss_rate) + "%", 22, this.getHeight()/4-200);
+					g.drawString("Left Data Loss Rate (Video) : "+ String.valueOf(Data.left_data_loss_rate_during_video_play) + "%", 22, this.getHeight()/4-180);
 				}
 								
-				int x3 = Math.round((float)(count - 1) * 1900 /((float) Data.nor_pupildata.size()) + 10);
+				int x3 = Math.round((float)(count - 1) * 1890 /((float) Data.nor_pupildata.size()) + 20);
 				float y3 = this.getHeight()/4*3 - (Float.valueOf(Data.nor_pupildata.get(count-1).right))*20;
 				
-				int x4 = Math.round(((float)count) * 1900 /((float) Data.nor_pupildata.size()) + 10);
+				int x4 = Math.round(((float)count) * 1890 /((float) Data.nor_pupildata.size()) + 20);
 				float y4 = this.getHeight()/4*3 - (Float.valueOf(Data.nor_pupildata.get(count).right))*20;
 								
 				
@@ -97,7 +101,10 @@ public class Drawing extends JFrame {
 				
 				g.setColor(Color.RED);
 				if(count == 1) {
-					g.drawString("Right Pupil "+ String.valueOf(Data.nor_pupildata.get(count-1).right), 20, this.getHeight()/4*3-200);
+					g.drawString("Mean of Right Pupil : "+ String.valueOf(Data.pupil_mean_right), 22, this.getHeight()/4*3-240);
+					g.drawString("Mean of Normalized Right Pupil : "+ String.valueOf(Data.right_nor_data_mean), 22, this.getHeight()/4*3-220);
+					g.drawString("Right Data Loss Rate (Overall) : "+ String.valueOf(Data.right_loss_rate) + "%", 22, this.getHeight()/4*3-200);
+					g.drawString("Right Data Loss Rate (Video) : "+ String.valueOf(Data.right_data_loss_rate_during_video_play) + "%", 22, this.getHeight()/4*3-180);
 				}
 				if(Data.nor_pupildata.get(count).timestamp.equalsIgnoreCase(Data.log_video_time_start)) {
 					g.drawLine(x4, 0, x4, this.getHeight());
@@ -116,6 +123,9 @@ public class Drawing extends JFrame {
 					String time_text_end = String.valueOf(time_temp[1])+"min "+String.valueOf(time_temp[2])+"sec "+String.valueOf(time_temp[3]);
 					g.drawString(time_text_end, x4, this.getHeight()/4 - 160);
 					flag = 0;
+				}
+				if(count == Data.nor_pupildata.size()-1) {
+					g.drawLine(x4, 0, x4, this.getHeight());
 				}
 			}
 		}

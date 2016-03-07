@@ -19,10 +19,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class Interpolate {
 	public JFrame frame;
 	public Thread t;
-	float left_loss_rate = 0.0f;
-	float right_loss_rate = 0.0f;
-	public float left_data_loss_rate_during_video_play = 0.0f;
-	public float right_data_loss_rate_during_video_play = 0.0f;
+//	float left_loss_rate = 0.0f;
+//	float right_loss_rate = 0.0f;
+//	public float left_data_loss_rate_during_video_play = 0.0f;
+//	public float right_data_loss_rate_during_video_play = 0.0f;
 	int count2 = 0;
 	float y = 0f;
 	public JTextField File_Location;
@@ -190,8 +190,8 @@ public class Interpolate {
 					}
 				}
 				System.out.println(count4 +","+ count5 +","+ count6);
-				left_data_loss_rate_during_video_play =((float)count5/(float)count4)*100;
-				right_data_loss_rate_during_video_play = ((float)count6/(float)count4)*100;
+				Data.left_data_loss_rate_during_video_play = ((float)count5/(float)count4)*100;
+				Data.right_data_loss_rate_during_video_play = ((float)count6/(float)count4)*100;
 				//data writing
 					if (interval == JFileChooser.APPROVE_OPTION) {
 						FileWriter fw = new FileWriter(JFC.getSelectedFile() + ".csv");
@@ -211,12 +211,12 @@ public class Interpolate {
 								fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
 										+ String.valueOf(Data.pupildata.get(count-1).right) + ","
 										+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
-										+ left_loss_rate + "%" + ","
-										+ right_loss_rate + "%" + ","
+										+ Data.left_loss_rate + "%" + ","
+										+ Data.right_loss_rate + "%" + ","
 										+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
 										+ String.valueOf(Data.nor_pupildata.get(count-1).right) + ","
-										+ left_data_loss_rate_during_video_play + "%" + ","
-										+ right_data_loss_rate_during_video_play + "%" + "\n");
+										+ Data.left_data_loss_rate_during_video_play + "%" + ","
+										+ Data.right_data_loss_rate_during_video_play + "%" + "\n");
 							} else if(count == 2) {
 								fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
 										+ String.valueOf(Data.pupildata.get(count-1).right) + ","
@@ -235,8 +235,8 @@ public class Interpolate {
 										+ Data.pupil_mean_right + ","
 										+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
 										+ String.valueOf(Data.nor_pupildata.get(count-1).right) + ","
-										+ String.valueOf(Data.left_nor_data_mean) + "%" + "," 
-										+ String.valueOf(Data.right_nor_data_mean) + "%" + "\n");
+										+ String.valueOf(Data.left_nor_data_mean) + "," 
+										+ String.valueOf(Data.right_nor_data_mean) + "\n");
 							} else if(count == 4) {
 								fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
 										+ String.valueOf(Data.pupildata.get(count-1).right) + ","
@@ -332,8 +332,8 @@ public class Interpolate {
 					e.printStackTrace();
 				}
 			}
-			left_loss_rate = (Float.valueOf(Data.left_loss) / count) * 100;
-			right_loss_rate = (Float.valueOf(Data.right_loss) / count) * 100;
+			Data.left_loss_rate = (Float.valueOf(Data.left_loss) / count) * 100;
+			Data.right_loss_rate = (Float.valueOf(Data.right_loss) / count) * 100;
 
 			JOptionPane.showMessageDialog(frame, "Data Importing Complete");
 		} catch (Exception e) {

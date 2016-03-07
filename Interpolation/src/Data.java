@@ -21,6 +21,11 @@ public class Data {
 	public static int right_loss;
 	public static String log_timestamp;
 	
+	public static float left_data_loss_rate_during_video_play;
+	public static float right_data_loss_rate_during_video_play;
+	public static float left_loss_rate;
+	public static float right_loss_rate;
+	
 	public static float left_nor_data_mean;
 	public static float right_nor_data_mean;
 	
