@@ -41,4 +41,9 @@ public class Data {
 	public static int currentPoint2 = 0;
 	public static Drawing DF = new Drawing();
 	public static String[] location;
+	public static String[] time_check;
+	public static String[] temp_time_check;
+	public static String min;
+	public static String sec;
+	public static String point_sec;
 }
