@@ -183,19 +183,19 @@ public class Interpolate {
 		method1.setBounds(15, 295, 315, 25);
 		frame.getContentPane().add(method1);
 //----------------------------------------------------------------------------------------//
-		JButton graph_w = new JButton("Window Graph");
-		graph_w.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Data.currentPoint2 = 0;
-				Data.DF2.Input_data(Data.currentPoint2);
-				Data.DF2.repaint();
-				Data.DF2.setVisible(true);
-			}
-		});
-		graph_w.setBounds(345, 295, 150, 25);
-		frame.getContentPane().add(graph_w);
+//		JButton graph_w = new JButton("Window Graph");
+//		graph_w.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent arg0) {
+//				Data.currentPoint2 = 0;
+//				Data.DF2.Input_data(Data.currentPoint2);
+//				Data.DF2.repaint();
+//				Data.DF2.setVisible(true);
+//			}
+//		});
+//		graph_w.setBounds(345, 295, 150, 25);
+//		frame.getContentPane().add(graph_w);
 //----------------------------------------------------------------------------------------//
 		JButton organize = new JButton("Organize");
 		organize.addActionListener(new ActionListener() {
