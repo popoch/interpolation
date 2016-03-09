@@ -11,6 +11,7 @@ public class Data {
 	public static ArrayList<Pupil> interpolate_L = new ArrayList<Pupil>();
 	public static ArrayList<PointL> inter_calcul_L = new ArrayList<PointL>();
 	public static ArrayList<PointL> inter_result_L = new ArrayList<PointL>();
+	public static ArrayList<Npupil> window_normal_inter_data = new ArrayList<Npupil>();
 	
 	public static ArrayList<Pupil> interpolate_R = new ArrayList<Pupil>();
 	public static ArrayList<PointR> inter_result_R = new ArrayList<PointR>();

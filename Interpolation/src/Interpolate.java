@@ -1,3 +1,4 @@
+import java.awt.Component;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
@@ -12,20 +13,20 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Interpolate {
 	public JFrame frame;
 	public Thread t;
-//	float left_loss_rate = 0.0f;
-//	float right_loss_rate = 0.0f;
-//	public float left_data_loss_rate_during_video_play = 0.0f;
-//	public float right_data_loss_rate_during_video_play = 0.0f;
 	int count2 = 0;
 	float y = 0f;
 	public JTextField File_Location;
+	public JTextField Window_Size_TextField;
+	int windowflag = 0;
 	
 	public Interpolate() {
 		run();
@@ -127,7 +128,33 @@ public class Interpolate {
 		});
 		interpolate.setBounds(15, 95, 150, 25);
 		frame.getContentPane().add(interpolate);
+//----------------------------------------------------------------------------------------//
+		JLabel lblWindowSize = new JLabel("Window Size");
+		lblWindowSize.setBounds(180, 15, 80, 25);
+		lblWindowSize.setHorizontalAlignment(SwingConstants.CENTER);
+		frame.getContentPane().add(lblWindowSize);
 //----------------------------------------------------------------------------------------//		
+		Window_Size_TextField = new JTextField();
+		Window_Size_TextField.setText("0");
+		Window_Size_TextField.setBounds(275, 15, 55, 25);
+		frame.getContentPane().add(Window_Size_TextField);
+		Window_Size_TextField.setColumns(10);
+//----------------------------------------------------------------------------------------//	
+		JButton method3 = new JButton("Interpolate  >  Normalize  >  Window Size");
+		method3.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				interpolate();
+				normalize();
+				windowflag = 3;
+				windowsize();
+			}			
+		});
+		
+		method3.setBounds(15, 215, 300, 25);
+		frame.getContentPane().add(method3);
+//----------------------------------------------------------------------------------------//
 		JButton organize = new JButton("Organize");
 		organize.addActionListener(new ActionListener() {
 
@@ -196,84 +223,269 @@ public class Interpolate {
 					if (interval == JFileChooser.APPROVE_OPTION) {
 						FileWriter fw = new FileWriter(JFC.getSelectedFile() + ".csv");
 						
-						for(int count = 0; count <= Data.pupildata.size(); count++) {
-							if(count == 0) {
-								fw.write("Left Pupil Size" + ","
-										+ "Right Pupil Size" + ","
-										+ "Timestamp" + ","
-										+ "Left Data Loss Rate" + ","
-										+ "Right Data Loss Rate" + ","
-										+ "Normalized Left" + ","
-										+ "Normalized Right" + ","
-										+ "Data Loss During Video_Left" + ","
-										+ "Data Loss During Video_Right" + "\n");
-							} else if(count == 1) {
-								fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
-										+ String.valueOf(Data.pupildata.get(count-1).right) + ","
-										+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
-										+ Data.left_loss_rate + "%" + ","
-										+ Data.right_loss_rate + "%" + ","
-										+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
-										+ String.valueOf(Data.nor_pupildata.get(count-1).right) + ","
-										+ Data.left_data_loss_rate_during_video_play + "%" + ","
-										+ Data.right_data_loss_rate_during_video_play + "%" + "\n");
-							} else if(count == 2) {
-								fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
-										+ String.valueOf(Data.pupildata.get(count-1).right) + ","
-										+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
-										+ "Left Mean" + ","
-										+ "Right Mean" + ","
-										+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
-										+ String.valueOf(Data.nor_pupildata.get(count-1).right) + ","
-										+ "Left Nor Mean" + "," 
-										+ "Right Nor Mean" + "\n");
-							} else if(count == 3) {
-								fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
-										+ String.valueOf(Data.pupildata.get(count-1).right) + ","
-										+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
-										+ Data.pupil_mean_left + ","
-										+ Data.pupil_mean_right + ","
-										+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
-										+ String.valueOf(Data.nor_pupildata.get(count-1).right) + ","
-										+ String.valueOf(Data.left_nor_data_mean) + "," 
-										+ String.valueOf(Data.right_nor_data_mean) + "\n");
-							} else if(count == 4) {
-								fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
-										+ String.valueOf(Data.pupildata.get(count-1).right) + ","
-										+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
-										+ "Left SD" + ","
-										+ "Right SD" + ","
-										+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
-										+ String.valueOf(Data.nor_pupildata.get(count-1).right) + "\n");
-							} else if(count == 5) {
-								fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
-										+ String.valueOf(Data.pupildata.get(count-1).right) + ","
-										+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
-										+ Data.pupil_sd_left + ","
-										+ Data.pupil_sd_right + ","
-										+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
-										+ String.valueOf(Data.nor_pupildata.get(count-1).right) + "\n");
-							} else if(Data.pupildata.get(count-1).timestamp.equalsIgnoreCase(Data.log_video_time_start)) {
-								fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
-										+ String.valueOf(Data.pupildata.get(count-1).right) + ","
-										+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
-										+ "video start" + "," + ","
-										+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
-										+ String.valueOf(Data.nor_pupildata.get(count-1).right) + "\n");
-							} else if(Data.pupildata.get(count-1).timestamp.equalsIgnoreCase(Data.log_video_time_end)) {
-								fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
-										+ String.valueOf(Data.pupildata.get(count-1).right) + ","
-										+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
-										+ "video end" + "," + ","
-										+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
-										+ String.valueOf(Data.nor_pupildata.get(count-1).right) + "\n");
-							} else {
+						if(Integer.valueOf(Window_Size_TextField.getText()) == 0) {
+							
+							for(int count = 0; count <= Data.pupildata.size(); count++) {
+								if(count == 0) {
+									fw.write("Left Pupil Size" + ","
+											+ "Right Pupil Size" + ","
+											+ "Timestamp" + ","
+											+ "Left Data Loss Rate" + ","
+											+ "Right Data Loss Rate" + ","
+											+ "Normalized Left" + ","
+											+ "Normalized Right" + ","
+											+ "Data Loss During Video_Left" + ","
+											+ "Data Loss During Video_Right" + "\n");
+								} else if(count == 1) {
 									fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
 											+ String.valueOf(Data.pupildata.get(count-1).right) + ","
 											+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
-											+ "," + ","
+											+ Data.left_loss_rate + "%" + ","
+											+ Data.right_loss_rate + "%" + ","
+											+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+											+ String.valueOf(Data.nor_pupildata.get(count-1).right) + ","
+											+ Data.left_data_loss_rate_during_video_play + "%" + ","
+											+ Data.right_data_loss_rate_during_video_play + "%" + "\n");
+								} else if(count == 2) {
+									fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+											+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+											+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+											+ "Left Mean" + ","
+											+ "Right Mean" + ","
+											+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+											+ String.valueOf(Data.nor_pupildata.get(count-1).right) + ","
+											+ "Left Nor Mean" + "," 
+											+ "Right Nor Mean" + "\n");
+								} else if(count == 3) {
+									fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+											+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+											+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+											+ Data.pupil_mean_left + ","
+											+ Data.pupil_mean_right + ","
+											+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+											+ String.valueOf(Data.nor_pupildata.get(count-1).right) + ","
+											+ String.valueOf(Data.left_nor_data_mean) + "," 
+											+ String.valueOf(Data.right_nor_data_mean) + "\n");
+								} else if(count == 4) {
+									fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+											+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+											+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+											+ "Left SD" + ","
+											+ "Right SD" + ","
 											+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
 											+ String.valueOf(Data.nor_pupildata.get(count-1).right) + "\n");
+								} else if(count == 5) {
+									fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+											+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+											+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+											+ Data.pupil_sd_left + ","
+											+ Data.pupil_sd_right + ","
+											+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+											+ String.valueOf(Data.nor_pupildata.get(count-1).right) + "\n");
+								} else if(Data.pupildata.get(count-1).timestamp.equalsIgnoreCase(Data.log_video_time_start)) {
+									fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+											+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+											+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+											+ "video start" + "," + ","
+											+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+											+ String.valueOf(Data.nor_pupildata.get(count-1).right) + "\n");
+								} else if(Data.pupildata.get(count-1).timestamp.equalsIgnoreCase(Data.log_video_time_end)) {
+									fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+											+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+											+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+											+ "video end" + "," + ","
+											+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+											+ String.valueOf(Data.nor_pupildata.get(count-1).right) + "\n");
+								} else {
+										fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+												+ "," + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).right) + "\n");
+								}
+							}
+						} else if(Integer.valueOf(Window_Size_TextField.getText()) != 0) {
+							
+							for(int count = 0; count <= Data.pupildata.size(); count++) {
+								
+								if(count < Data.window_normal_inter_data.size()) {
+									if(count == 0) {
+										fw.write("Left Pupil Size" + ","
+												+ "Right Pupil Size" + ","
+												+ "Timestamp" + ","
+												+ "Left Data Loss Rate" + ","
+												+ "Right Data Loss Rate" + ","
+												+ "Normalized Left" + ","
+												+ "Normalized Right" + ","
+												+ "Data Loss During Video_Left" + ","
+												+ "Data Loss During Video_Right" + ","
+												+ "Windowed left data" + ","
+												+ "Windowed right data" + "\n");
+									} else if(count == 1) {
+										fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+												+ Data.left_loss_rate + "%" + ","
+												+ Data.right_loss_rate + "%" + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).right) + ","
+												+ Data.left_data_loss_rate_during_video_play + "%" + ","
+												+ Data.right_data_loss_rate_during_video_play + "%" + "," 
+												+ String.valueOf(Data.window_normal_inter_data.get(count-1).left) + ","
+												+ String.valueOf(Data.window_normal_inter_data.get(count-1).right) + "\n");
+									} else if(count == 2) {
+										fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+												+ "Left Mean" + ","
+												+ "Right Mean" + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).right) + ","
+												+ "Left Nor Mean" + "," 
+												+ "Right Nor Mean" + ","
+												+ String.valueOf(Data.window_normal_inter_data.get(count-1).left) + ","
+												+ String.valueOf(Data.window_normal_inter_data.get(count-1).right) + "\n");
+									} else if(count == 3) {
+										fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+												+ Data.pupil_mean_left + ","
+												+ Data.pupil_mean_right + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).right) + ","
+												+ String.valueOf(Data.left_nor_data_mean) + "," 
+												+ String.valueOf(Data.right_nor_data_mean) + ","
+												+ String.valueOf(Data.window_normal_inter_data.get(count-1).left) + ","
+												+ String.valueOf(Data.window_normal_inter_data.get(count-1).right) + "\n");
+									} else if(count == 4) {
+										fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+												+ "Left SD" + ","
+												+ "Right SD" + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).right) + "," + "," + ","
+												+ String.valueOf(Data.window_normal_inter_data.get(count-1).left) + ","
+												+ String.valueOf(Data.window_normal_inter_data.get(count-1).right) + "\n");
+									} else if(count == 5) {
+										fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+												+ Data.pupil_sd_left + ","
+												+ Data.pupil_sd_right + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).right) + "," + "," + ","
+												+ String.valueOf(Data.window_normal_inter_data.get(count-1).left) + ","
+												+ String.valueOf(Data.window_normal_inter_data.get(count-1).right) + "\n");
+									} else if(Data.pupildata.get(count-1).timestamp.equalsIgnoreCase(Data.log_video_time_start)) {
+										fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+												+ "video start" + "," + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).right) + "," + "," + ","
+												+ String.valueOf(Data.window_normal_inter_data.get(count-1).left) + ","
+												+ String.valueOf(Data.window_normal_inter_data.get(count-1).right) + "\n");
+									} else if(Data.pupildata.get(count-1).timestamp.equalsIgnoreCase(Data.log_video_time_end)) {
+										fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+												+ "video end" + "," + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).right) + "," + "," + ","
+												+ String.valueOf(Data.window_normal_inter_data.get(count-1).left) + ","
+												+ String.valueOf(Data.window_normal_inter_data.get(count-1).right) + "\n");
+									} else {
+											fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+													+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+													+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+													+ "," + ","
+													+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+													+ String.valueOf(Data.nor_pupildata.get(count-1).right) + "," + "," + ","
+													+ String.valueOf(Data.window_normal_inter_data.get(count-1).left) + ","
+													+ String.valueOf(Data.window_normal_inter_data.get(count-1).right) + "\n");
+									}
+								} else {
+									if(count == 0) {
+										fw.write("Left Pupil Size" + ","
+												+ "Right Pupil Size" + ","
+												+ "Timestamp" + ","
+												+ "Left Data Loss Rate" + ","
+												+ "Right Data Loss Rate" + ","
+												+ "Normalized Left" + ","
+												+ "Normalized Right" + ","
+												+ "Data Loss During Video_Left" + ","
+												+ "Data Loss During Video_Right" + "\n");
+									} else if(count == 1) {
+										fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+												+ Data.left_loss_rate + "%" + ","
+												+ Data.right_loss_rate + "%" + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).right) + ","
+												+ Data.left_data_loss_rate_during_video_play + "%" + ","
+												+ Data.right_data_loss_rate_during_video_play + "%" + "\n");
+									} else if(count == 2) {
+										fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+												+ "Left Mean" + ","
+												+ "Right Mean" + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).right) + ","
+												+ "Left Nor Mean" + "," 
+												+ "Right Nor Mean" + "\n");
+									} else if(count == 3) {
+										fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+												+ Data.pupil_mean_left + ","
+												+ Data.pupil_mean_right + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).right) + ","
+												+ String.valueOf(Data.left_nor_data_mean) + "," 
+												+ String.valueOf(Data.right_nor_data_mean) + "\n");
+									} else if(count == 4) {
+										fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+												+ "Left SD" + ","
+												+ "Right SD" + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).right) + "\n");
+									} else if(count == 5) {
+										fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+												+ Data.pupil_sd_left + ","
+												+ Data.pupil_sd_right + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).right) + "\n");
+									} else if(Data.pupildata.get(count-1).timestamp.equalsIgnoreCase(Data.log_video_time_start)) {
+										fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+												+ "video start" + "," + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).right) + "\n");
+									} else if(Data.pupildata.get(count-1).timestamp.equalsIgnoreCase(Data.log_video_time_end)) {
+										fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+												+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+												+ "video end" + "," + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+												+ String.valueOf(Data.nor_pupildata.get(count-1).right) + "\n");
+									} else {
+											fw.write(String.valueOf(Data.pupildata.get(count-1).left) + ","
+													+ String.valueOf(Data.pupildata.get(count-1).right) + ","
+													+ String.valueOf(Data.pupildata.get(count-1).timestamp) + ","
+													+ "," + ","
+													+ String.valueOf(Data.nor_pupildata.get(count-1).left) + ","
+													+ String.valueOf(Data.nor_pupildata.get(count-1).right) + "\n");
+									}
+								}
 							}
 						}
 						fw.close();
@@ -659,6 +871,51 @@ public class Interpolate {
 			JOptionPane.showMessageDialog(frame, "Data Normalization Complete");
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+//----------------------------------------------------------------------------------------//
+	public void windowsize(){
+		if(windowflag == 3) {
+			
+			System.out.println(windowflag);
+			int window_size_input = Integer.valueOf(Window_Size_TextField.getText()) * 30;
+			int array_size = ((int)(Data.nor_pupildata.size()/window_size_input)) + 1;
+			
+			float[][] temp2 = new float[array_size][window_size_input];
+			float[][] temp3 = new float[array_size][window_size_input];
+			
+			int i = 0;
+			int j = 0;
+			
+			for(Npupil temp : Data.nor_pupildata) {	
+				temp2[i][j] = temp.left;
+				temp3[i][j] = temp.right;
+				j++;
+				if(j == window_size_input) {
+					i++;
+					j = 0;
+				}
+			}
+			
+			for(int k = 0; k < array_size; k++) {
+				
+				Npupil temp_data = new Npupil();
+				float window_left = 0;
+				float window_right = 0;
+				
+				for(int z = 0; z < window_size_input; z++) {
+					if(temp2[k][z] == 0 && temp3[k][z] == 0) {
+						window_size_input = z;
+					} else {
+						window_left += temp2[k][z];
+						window_right += temp3[k][z];
+					}
+				}
+			
+				temp_data.left = window_left / (float)window_size_input;
+				temp_data.right = window_right / (float)window_size_input;
+				Data.window_normal_inter_data.add(temp_data);
+			}
 		}
 	}
 }
