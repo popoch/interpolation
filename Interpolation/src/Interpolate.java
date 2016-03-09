@@ -40,7 +40,7 @@ public class Interpolate {
 		
 		
 		frame = new JFrame();
-		frame.setBounds(width/2-250, height/2-150, 600, 300);
+		frame.setBounds(width/2-250, height/2-150, 600, 365);
 		frame.setResizable(false);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -97,8 +97,6 @@ public class Interpolate {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Data.currentPoint2 = 0;
-//				Data.weight = Float.valueOf(Weight_TextField.getText());
-//				Data.window_size = Integer.valueOf(Window_Size_TextField.getText());
 				Data.DF.Input_data(Data.currentPoint2);
 				Data.DF.repaint();
 				Data.DF.setVisible(true);
@@ -152,8 +150,52 @@ public class Interpolate {
 			}			
 		});
 		
-		method3.setBounds(15, 215, 300, 25);
+		method3.setBounds(15, 215, 315, 25);
 		frame.getContentPane().add(method3);
+//----------------------------------------------------------------------------------------//
+		JButton method2 = new JButton("Interpolate  >  Window Size  >  Normalize");
+		method2.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				interpolate();
+				windowflag = 2;
+				windowsize();
+				normalize();
+			}			
+		});
+		
+		method2.setBounds(15, 255, 315, 25);
+		frame.getContentPane().add(method2);
+//----------------------------------------------------------------------------------------//
+		JButton method1 = new JButton("Window Size  >  Interpolate  >  Normalize");
+		method1.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				windowflag = 1;
+				windowsize();
+				interpolate();
+				normalize();
+			}			
+		});
+		
+		method1.setBounds(15, 295, 315, 25);
+		frame.getContentPane().add(method1);
+//----------------------------------------------------------------------------------------//
+		JButton graph_w = new JButton("Window Graph");
+		graph_w.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Data.currentPoint2 = 0;
+				Data.DF2.Input_data(Data.currentPoint2);
+				Data.DF2.repaint();
+				Data.DF2.setVisible(true);
+			}
+		});
+		graph_w.setBounds(345, 295, 150, 25);
+		frame.getContentPane().add(graph_w);
 //----------------------------------------------------------------------------------------//
 		JButton organize = new JButton("Organize");
 		organize.addActionListener(new ActionListener() {
@@ -216,7 +258,7 @@ public class Interpolate {
 						count4++;
 					}
 				}
-				System.out.println(count4 +","+ count5 +","+ count6);
+				
 				Data.left_data_loss_rate_during_video_play = ((float)count5/(float)count4)*100;
 				Data.right_data_loss_rate_during_video_play = ((float)count6/(float)count4)*100;
 				//data writing
@@ -877,7 +919,6 @@ public class Interpolate {
 	public void windowsize(){
 		if(windowflag == 3) {
 			
-			System.out.println(windowflag);
 			int window_size_input = Integer.valueOf(Window_Size_TextField.getText()) * 30;
 			int array_size = ((int)(Data.nor_pupildata.size()/window_size_input)) + 1;
 			

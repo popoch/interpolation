@@ -40,7 +40,11 @@ public class Data {
 	public static String log_video_time_end;
 	
 	public static int currentPoint2 = 0;
+	
 	public static Drawing DF = new Drawing();
+	
+	public static Drawing2 DF2 = new Drawing2();
+	
 	public static String[] location;
 	public static String[] time_check;
 	public static String[] temp_time_check;
