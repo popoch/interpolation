@@ -183,19 +183,19 @@ public class Interpolate {
 		method1.setBounds(15, 295, 315, 25);
 		frame.getContentPane().add(method1);
 //----------------------------------------------------------------------------------------//
-//		JButton graph_w = new JButton("Window Graph");
-//		graph_w.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent arg0) {
-//				Data.currentPoint2 = 0;
-//				Data.DF2.Input_data(Data.currentPoint2);
-//				Data.DF2.repaint();
-//				Data.DF2.setVisible(true);
-//			}
-//		});
-//		graph_w.setBounds(345, 295, 150, 25);
-//		frame.getContentPane().add(graph_w);
+		JButton graph_w = new JButton("Window Graph");
+		graph_w.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Data.currentPoint2 = 0;
+				Data.DF2.Input_data(Data.currentPoint2);
+				Data.DF2.repaint();
+				Data.DF2.setVisible(true);
+			}
+		});
+		graph_w.setBounds(345, 295, 150, 25);
+		frame.getContentPane().add(graph_w);
 //----------------------------------------------------------------------------------------//
 		JButton organize = new JButton("Organize");
 		organize.addActionListener(new ActionListener() {
@@ -219,7 +219,21 @@ public class Interpolate {
 					String[] dtime = temps4[1].split(":|\\.", -1);
 					String[] temps5 = tmp2.split(":", -1);
 					String[] log_video_end = tmp3.split(":", -1);
-
+					
+					//save original time stamp
+					if(count == 0) {
+						Data.overall_time_start = String.valueOf(temps4[1]);
+					} else if(count == Data.pupildata.size()-1) {
+						Data.overall_time_end = String.valueOf(temps4[1]);
+					}
+					
+					Time t = new Time();
+					t.hour = dtime[0];
+					t.minute = dtime[1];
+					t.second = dtime[2];
+					t.pointsec = dtime[3];
+					Data.time.add(t);
+					
 					if(dtime[0].equals(temps5[0]) == true && dtime[1].equals(temps5[1]) == true && dtime[2].equals(temps5[2]) == true) {
 						
 						int result = Math.abs(Integer.valueOf(dtime[3]) - Integer.valueOf(temps5[3]));
@@ -918,7 +932,8 @@ public class Interpolate {
 //----------------------------------------------------------------------------------------//
 	public void windowsize(){
 		if(windowflag == 3) {
-			
+			float temp_window_pupil_mean_left = 0;
+			float temp_window_pupil_mean_right = 0;
 			int window_size_input = Integer.valueOf(Window_Size_TextField.getText()) * 30;
 			int array_size = ((int)(Data.nor_pupildata.size()/window_size_input)) + 1;
 			
@@ -957,6 +972,17 @@ public class Interpolate {
 				temp_data.right = window_right / (float)window_size_input;
 				Data.window_normal_inter_data.add(temp_data);
 			}
+			
+			Data.window_size = Integer.valueOf(Window_Size_TextField.getText());
+			
+			for(int z = 0; z < Data.window_normal_inter_data.size(); z++) {
+				temp_window_pupil_mean_left += Data.window_normal_inter_data.get(z).left;
+				temp_window_pupil_mean_right += Data.window_normal_inter_data.get(z).right;
+			}
+			
+			Data.window_pupil_mean_left = temp_window_pupil_mean_left/(float)Data.window_normal_inter_data.size();
+			Data.window_pupil_mean_right = temp_window_pupil_mean_right/(float)Data.window_normal_inter_data.size();;
+
 		}
 	}
 }

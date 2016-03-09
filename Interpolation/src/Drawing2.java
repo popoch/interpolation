@@ -11,12 +11,12 @@ import java.awt.Stroke;
 import java.awt.geom.Line2D;
 
 
-public class Drawing extends JFrame {
+public class Drawing2 extends JFrame {
 
 	private DrawingPanel drawingpanel;
 	private int current_point;
 	
-	public Drawing() {
+	public Drawing2() {
 		setResizable(false);
 		setBounds(0,0,1920,1080);
 		drawingpanel = new DrawingPanel();
@@ -66,13 +66,14 @@ public class Drawing extends JFrame {
 			
 			//30, this.getHeight()/4*3
 			
-			for(int count = 1; count < Data.nor_pupildata.size(); count++) {
-				int x1 = Math.round((float)(count - 1) * 1890 /((float) Data.nor_pupildata.size()) + 20);
-				float y1 = this.getHeight()/4 - (Float.valueOf(Data.nor_pupildata.get(count-1).left))*20;
+			for(int count = 1; count < Data.window_normal_inter_data.size(); count++) {
+				int x1 = Math.round((float)(count - 1) * 1890 /((float) Data.window_normal_inter_data.size()) + 20);
+				float y1 = this.getHeight()/4 - (Float.valueOf(Data.window_normal_inter_data.get(count-1).left))*20;
 				
-				int x2 = Math.round(((float)count) * 1890 /((float) Data.nor_pupildata.size()) + 20);
-				float y2 = this.getHeight()/4 - (Float.valueOf(Data.nor_pupildata.get(count).left))*20;
-											
+				int x2 = Math.round(((float)count) * 1890 /((float) Data.window_normal_inter_data.size()) + 20);
+				float y2 = this.getHeight()/4 - (Float.valueOf(Data.window_normal_inter_data.get(count).left))*20;
+								
+				
 				if(flag == 1) {
 					g.setColor(Color.RED);
 				} else {
@@ -82,17 +83,18 @@ public class Drawing extends JFrame {
 				
 				g.setColor(Color.RED);
 				if(count == 1) {
-					g.drawString("Mean of Left Pupil : "+ String.valueOf(Data.pupil_mean_left), 25, this.getHeight()/4-240);
-					g.drawString("Mean of Normalized Left Pupil : "+ String.valueOf(Data.left_nor_data_mean), 25, this.getHeight()/4-220);
+					g.drawString("Mean of Left Pupil : "+ String.valueOf(Data.window_pupil_mean_left), 25, this.getHeight()/4-240);
+					g.drawString("Window Size : "+ String.valueOf(Data.window_size), 25, this.getHeight()/4-220);
+					//g.drawString("Mean of Normalized Left Pupil : "+ String.valueOf(Data.left_nor_data_mean), 25, this.getHeight()/4-220);
 					g.drawString("Left Data Loss Rate (Overall) : "+ String.valueOf(Data.left_loss_rate) + "%", 25, this.getHeight()/4-200);
 					g.drawString("Left Data Loss Rate (Video) : "+ String.valueOf(Data.left_data_loss_rate_during_video_play) + "%", 25, this.getHeight()/4-180);
 				}
 								
-				int x3 = Math.round((float)(count - 1) * 1890 /((float) Data.nor_pupildata.size()) + 20);
-				float y3 = this.getHeight()/4*3 - (Float.valueOf(Data.nor_pupildata.get(count-1).right))*20;
+				int x3 = Math.round((float)(count - 1) * 1890 /((float) Data.window_normal_inter_data.size()) + 20);
+				float y3 = this.getHeight()/4*3 - (Float.valueOf(Data.window_normal_inter_data.get(count-1).right))*20;
 				
-				int x4 = Math.round(((float)count) * 1890 /((float) Data.nor_pupildata.size()) + 20);
-				float y4 = this.getHeight()/4*3 - (Float.valueOf(Data.nor_pupildata.get(count).right))*20;
+				int x4 = Math.round(((float)count) * 1890 /((float) Data.window_normal_inter_data.size()) + 20);
+				float y4 = this.getHeight()/4*3 - (Float.valueOf(Data.window_normal_inter_data.get(count).right))*20;
 								
 				
 				if(flag == 1) {
@@ -104,74 +106,14 @@ public class Drawing extends JFrame {
 				
 				g.setColor(Color.RED);
 				if(count == 1) {
-					String caltime1 = null;
-					String[] starttime = String.valueOf(Data.overall_time_start).split(":|\\.", -1);
-					
-					caltime1 = String.valueOf((Integer.valueOf(Data.time.get(count-1).hour) - Integer.valueOf(starttime[0])) + ":" 
-											+ (Integer.valueOf(Data.time.get(count-1).minute) - Integer.valueOf(starttime[1])) + ":"
-											+ (Integer.valueOf(Data.time.get(count-1).second) - Integer.valueOf(starttime[2])) + "."
-											+ (Integer.valueOf(Data.time.get(count-1).pointsec) - Integer.valueOf(starttime[3])));
-					
-					g.drawString(caltime1, 25, this.getHeight()/4*3-280);
-					g.drawString("Start time : "+ String.valueOf(Data.overall_time_start), 25, this.getHeight()/4*3-260);
-					g.drawString("Mean of Right Pupil : "+ String.valueOf(Data.pupil_mean_right), 25, this.getHeight()/4*3-240);
-					g.drawString("Mean of Normalized Right Pupil : "+ String.valueOf(Data.right_nor_data_mean), 25, this.getHeight()/4*3-220);
+					g.drawString("Mean of Right Pupil : "+ String.valueOf(Data.window_pupil_mean_right), 25, this.getHeight()/4*3-240);
+					g.drawString("Window Size : "+ String.valueOf(Data.window_size), 25, this.getHeight()/4*3-220);
+					//g.drawString("Mean of Normalized Right Pupil : "+ String.valueOf(Data.right_nor_data_mean), 25, this.getHeight()/4*3-220);
 					g.drawString("Right Data Loss Rate (Overall) : "+ String.valueOf(Data.right_loss_rate) + "%", 25, this.getHeight()/4*3-200);
 					g.drawString("Right Data Loss Rate (Video) : "+ String.valueOf(Data.right_data_loss_rate_during_video_play) + "%", 25, this.getHeight()/4*3-180);
 				}
-				if(Data.nor_pupildata.get(count).timestamp.equalsIgnoreCase(Data.log_video_time_start)) {
-					
-					String caltime2 = null;
-					String[] starttime = String.valueOf(Data.overall_time_start).split(":|\\.", -1);
-					
-					caltime2 = String.valueOf((Integer.valueOf(Data.time.get(count).hour) - Integer.valueOf(starttime[0])) + ":" 
-											+ (Integer.valueOf(Data.time.get(count).minute) - Integer.valueOf(starttime[1])) + ":"
-											+ (Integer.valueOf(Data.time.get(count).second) - Integer.valueOf(starttime[2])) + "."
-											+ (Integer.valueOf(Data.time.get(count).pointsec) - Integer.valueOf(starttime[3])));
-					g.drawString(caltime2, x2+5, this.getHeight()/4*2);
-					
-					g.drawLine(x4, 0, x4, this.getHeight());
-					g.drawString("Video Start", x4+5, this.getHeight()/4 - 200);
-					
-					String time_temp[] = Data.nor_pupildata.get(count).timestamp.split(":|\\.", -1);
-					String time_text_start = String.valueOf(time_temp[1])+"min "+String.valueOf(time_temp[2])+"sec "+String.valueOf(time_temp[3]);
-					g.drawString(time_text_start, x4+5, this.getHeight()/4 - 180);
-					flag = 1;
-					
-					Data.time_check = String.valueOf(Data.nor_pupildata.get(count).timestamp).split(":|\\.", -1);
-					
-				}
-				if(Data.nor_pupildata.get(count).timestamp.equalsIgnoreCase(Data.log_video_time_end)) {
-					
-					String caltime3 = null;
-					String[] starttime = String.valueOf(Data.overall_time_start).split(":|\\.", -1);
-					
-					caltime3 = String.valueOf((Integer.valueOf(Data.time.get(count).hour) - Integer.valueOf(starttime[0])) + ":" 
-											+ (Integer.valueOf(Data.time.get(count).minute) - Integer.valueOf(starttime[1])) + ":"
-											+ (Integer.valueOf(Data.time.get(count).second) - Integer.valueOf(starttime[2])) + "."
-											+ (Integer.valueOf(Data.time.get(count).pointsec) - Integer.valueOf(starttime[3])));
-					g.drawString(caltime3, x2+5, this.getHeight()/4*2);
-					
-					g.drawLine(x4, 0, x4, this.getHeight());
-					g.drawString("Video End", x4+5, this.getHeight()/4 - 200);
-					
-					String time_temp[] = Data.nor_pupildata.get(count).timestamp.split(":|\\.", -1);
-					String time_text_end = String.valueOf(time_temp[1])+"min "+String.valueOf(time_temp[2])+"sec "+String.valueOf(time_temp[3]);
-					g.drawString(time_text_end, x4+5, this.getHeight()/4 - 180);
-					flag = 0;
-				}
-				if(count == Data.nor_pupildata.size()-1) {
-					
-					String caltime4 = null;
-					String[] starttime = String.valueOf(Data.overall_time_start).split(":|\\.", -1);
-					
-					caltime4 = String.valueOf((Integer.valueOf(Data.time.get(count).hour) - Integer.valueOf(starttime[0])) + ":" 
-											+ (Integer.valueOf(Data.time.get(count).minute) - Integer.valueOf(starttime[1])) + ":"
-											+ (Integer.valueOf(Data.time.get(count).second) - Integer.valueOf(starttime[2])) + "."
-											+ (Integer.valueOf(Data.time.get(count).pointsec) - Integer.valueOf(starttime[3])));
-					g.drawString(caltime4, this.getWidth()-150, this.getHeight()/4*2-20);
-					
-					g.drawString("End time : "+ String.valueOf(Data.overall_time_end), this.getWidth()-150, this.getHeight()/4*2);
+				
+				if(count == Data.window_normal_inter_data.size()-1) {
 					g.drawLine(x4, 0, x4, this.getHeight());
 				}
 				g.setColor(Color.BLACK);

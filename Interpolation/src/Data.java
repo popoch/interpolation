@@ -12,7 +12,7 @@ public class Data {
 	public static ArrayList<PointL> inter_calcul_L = new ArrayList<PointL>();
 	public static ArrayList<PointL> inter_result_L = new ArrayList<PointL>();
 	public static ArrayList<Npupil> window_normal_inter_data = new ArrayList<Npupil>();
-	
+	public static ArrayList<Time> time = new ArrayList<Time>();
 	public static ArrayList<Pupil> interpolate_R = new ArrayList<Pupil>();
 	public static ArrayList<PointR> inter_result_R = new ArrayList<PointR>();
 	public static ArrayList<PointR> inter_calcul_R = new ArrayList<PointR>();
@@ -30,6 +30,11 @@ public class Data {
 	public static float left_nor_data_mean;
 	public static float right_nor_data_mean;
 	
+	public static int window_size;
+	public static float window_pupil_mean_left;
+	public static float window_pupil_mean_right;
+	public static float left_window_nor_data_mean;
+	public static float right_window_nor_data_mean;
 	
 	public static float pupil_mean_left;
 	public static float pupil_sd_left;
@@ -38,11 +43,13 @@ public class Data {
 	
 	public static String log_video_time_start;
 	public static String log_video_time_end;
+	public static String overall_time_start;
+	public static String overall_time_end;
 	
 	public static int currentPoint2 = 0;
 	
 	public static Drawing DF = new Drawing();
-	
+	public static Drawing2 DF2 = new Drawing2();
 	
 	public static String[] location;
 	public static String[] time_check;
