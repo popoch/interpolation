@@ -9,6 +9,11 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.geom.Line2D;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 
 public class Drawing extends JFrame {
@@ -33,8 +38,9 @@ public class Drawing extends JFrame {
 		int mdraw = 0;
 		int sdraw = 0;
 		int pdraw = 0;
+		
 		protected void paintComponent(Graphics g) {
-
+			
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.setColor(Color.WHITE);
@@ -108,27 +114,76 @@ public class Drawing extends JFrame {
 				if(Data.nor_pupildata.get(count).timestamp.equalsIgnoreCase(Data.ac_log_video_recording_start_time)) {
 					String caltime1 = null;
 					String[] temp_real = String.valueOf(Data.ac_log_video_recording_start_time).split(" ", -1);
-					String[] starttime = temp_real[1].split(":|\\.", -1);
+					String[] starttime = temp_real[1].split("\\.", -1);
+					String time1 = starttime[0];
+					String[] temp_real2 = String.valueOf(Data.nor_pupildata.get(count).timestamp).split(" ", -1);
+					String[] tmptime = temp_real2[1].split("\\.", -1);
+					String time2 = tmptime[0];
+					int difh = 0;
+					int difm = 0;
+					int difs = 0;
 					
-					caltime1 = String.valueOf((Integer.valueOf(Data.time.get(count).hour) - Integer.valueOf(starttime[0])) + ":" 
-											+ (Integer.valueOf(Data.time.get(count).minute) - Integer.valueOf(starttime[1])) + ":"
-											+ (Integer.valueOf(Data.time.get(count).second) - Integer.valueOf(starttime[2])) + "."
-											+ (Integer.valueOf(Data.time.get(count).pointsec) - Integer.valueOf(starttime[3])));
+					SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+					Date date1;
+					Date date2;
+					try {
+						date1 = format.parse(time1);
+						date2 = format.parse(time2);
+						long difference = date2.getTime() - date1.getTime(); 
+
+						long diffSeconds = difference / 1000 % 60;
+						long diffMinutes = difference / (60 * 1000) % 60;
+						long diffHours = difference / (60 * 60 * 1000) % 24;
+
+						difh = (int)diffHours;
+						difm = (int)diffMinutes;
+						difs = (int)diffSeconds;
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					caltime1 = String.valueOf(difh + ":" + difm + ":" + difs);
 					
-					g.drawString("Video recording start time", x4, this.getHeight()/4*2-20);
-					g.drawString(caltime1, x4, this.getHeight()/4*2);
+					g.drawString(Data.ac_log_video_recording_start_time, x4+5, this.getHeight()/4*2-40);
+					g.drawString("Video recording start time", x4+5, this.getHeight()/4*2-20);
+					g.drawString(caltime1, x4+5, this.getHeight()/4*2);
 					g.drawLine(x4, 0, x4, this.getHeight());
 					g.drawLine(0, this.getHeight()/4*3-280, this.getWidth(), this.getHeight()/4*3-280);
 				}
 				if(Data.nor_pupildata.get(count).timestamp.equalsIgnoreCase(Data.ac_log_video_recording_stop_time)) {
 					String caltime4 = null;
-					String[] temp_real = String.valueOf(Data.ac_log_video_recording_start_time).split(" ", -1);
-					String[] starttime = temp_real[1].split(":|\\.", -1);
+					String[] temp_real1 = String.valueOf(Data.ac_log_video_recording_start_time).split(" ", -1);
+					String[] starttime = temp_real1[1].split("\\.", -1);
+					String time1 = starttime[0];
+					String[] temp_real2 = String.valueOf(Data.nor_pupildata.get(count).timestamp).split(" ", -1);
+					String[] tmptime = temp_real2[1].split("\\.", -1);
+					String time2 = tmptime[0];
+					int difh = 0;
+					int difm = 0;
+					int difs = 0;
 					
-					caltime4 = String.valueOf((Integer.valueOf(Data.time.get(count).hour) - Integer.valueOf(starttime[0])) + ":" 
-											+ (Integer.valueOf(Data.time.get(count).minute) - Integer.valueOf(starttime[1])) + ":"
-											+ (Integer.valueOf(Data.time.get(count).second) - Integer.valueOf(starttime[2])) + "."
-											+ (Integer.valueOf(Data.time.get(count).pointsec) - Integer.valueOf(starttime[3])));
+					SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+					Date date1;
+					Date date2;
+					try {
+						date1 = format.parse(time1);
+						date2 = format.parse(time2);
+						long difference = date2.getTime() - date1.getTime(); 
+
+						long diffSeconds = difference / 1000 % 60;
+						long diffMinutes = difference / (60 * 1000) % 60;
+						long diffHours = difference / (60 * 60 * 1000) % 24;
+
+						difh = (int)diffHours;
+						difm = (int)diffMinutes;
+						difs = (int)diffSeconds;
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					caltime4 = String.valueOf(difh + ":" + difm + ":" + difs);
+					
+					g.drawString(Data.ac_log_video_recording_stop_time, x4-180, this.getHeight()/4*2-40);
 					g.drawString("Video recording end time", x4-180, this.getHeight()/4*2-20);
 					g.drawString(caltime4, x4-180, this.getHeight()/4*2);
 					g.drawLine(x4, 0, x4, this.getHeight());
@@ -144,18 +199,41 @@ public class Drawing extends JFrame {
 				}
 				if(Data.nor_pupildata.get(count).timestamp.equalsIgnoreCase(Data.log_video_time_start)) {
 					
-//					String caltime2 = null;
-//					String[] starttime = String.valueOf(Data.overall_time_start).split(":|\\.", -1);
-//					
-//					caltime2 = String.valueOf((Integer.valueOf(Data.time.get(count).hour) - Integer.valueOf(starttime[0])) + ":" 
-//											+ (Integer.valueOf(Data.time.get(count).minute) - Integer.valueOf(starttime[1])) + ":"
-//											+ (Integer.valueOf(Data.time.get(count).second) - Integer.valueOf(starttime[2])) + "."
-//											+ (Integer.valueOf(Data.time.get(count).pointsec) - Integer.valueOf(starttime[3])));
-//					g.drawString(caltime2, x2+5, this.getHeight()/4*2);
+					String caltime2 = null;
+					String[] temp_real = String.valueOf(Data.ac_log_video_recording_start_time).split(" ", -1);
+					String[] starttime = temp_real[1].split("\\.", -1);
+					String time1 = starttime[0];
+					String[] temp_real2 = String.valueOf(Data.nor_pupildata.get(count).timestamp).split(" ", -1);
+					String[] tmptime = temp_real2[1].split("\\.", -1);
+					String time2 = tmptime[0];
+					int difh = 0;
+					int difm = 0;
+					int difs = 0;
+					
+					SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+					Date date1;
+					Date date2;
+					try {
+						date1 = format.parse(time1);
+						date2 = format.parse(time2);
+						long difference = date2.getTime() - date1.getTime(); 
+
+						long diffSeconds = difference / 1000 % 60;
+						long diffMinutes = difference / (60 * 1000) % 60;
+						long diffHours = difference / (60 * 60 * 1000) % 24;
+
+						difh = (int)diffHours;
+						difm = (int)diffMinutes;
+						difs = (int)diffSeconds;
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					caltime2 = String.valueOf(difh + ":" + difm + ":" + difs);
 					
 					g.drawLine(x4, 0, x4, this.getHeight());
 					g.drawString("Video Start", x4+5, this.getHeight()/4-140);
-					
+					g.drawString(caltime2, x4+5, this.getHeight()/4*2);
 					String time_temp[] = Data.nor_pupildata.get(count).timestamp.split(":|\\.", -1);
 					String time_text_start = String.valueOf(time_temp[1])+"min "+String.valueOf(time_temp[2])+"sec "+String.valueOf(time_temp[3]);
 					g.drawString(time_text_start, x4+5, this.getHeight()/4-120);
@@ -166,18 +244,41 @@ public class Drawing extends JFrame {
 				}
 				if(Data.nor_pupildata.get(count).timestamp.equalsIgnoreCase(Data.log_video_time_end)) {
 					
-//					String caltime3 = null;
-//					String[] starttime = String.valueOf(Data.overall_time_start).split(":|\\.", -1);
-//					
-//					caltime3 = String.valueOf((Integer.valueOf(Data.time.get(count).hour) - Integer.valueOf(starttime[0])) + ":" 
-//											+ (Integer.valueOf(Data.time.get(count).minute) - Integer.valueOf(starttime[1])) + ":"
-//											+ (Integer.valueOf(Data.time.get(count).second) - Integer.valueOf(starttime[2])) + "."
-//											+ (Integer.valueOf(Data.time.get(count).pointsec) - Integer.valueOf(starttime[3])));
-//					g.drawString(caltime3, x2+5, this.getHeight()/4*2);
+					String caltime3 = null;
+					String[] temp_real = String.valueOf(Data.ac_log_video_recording_start_time).split(" ", -1);
+					String[] starttime = temp_real[1].split("\\.", -1);
+					String time1 = starttime[0];
+					String[] temp_real2 = String.valueOf(Data.nor_pupildata.get(count).timestamp).split(" ", -1);
+					String[] tmptime = temp_real2[1].split("\\.", -1);
+					String time2 = tmptime[0];
+					int difh = 0;
+					int difm = 0;
+					int difs = 0;
+					
+					SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+					Date date1;
+					Date date2;
+					try {
+						date1 = format.parse(time1);
+						date2 = format.parse(time2);
+						long difference = date2.getTime() - date1.getTime(); 
+
+						long diffSeconds = difference / 1000 % 60;
+						long diffMinutes = difference / (60 * 1000) % 60;
+						long diffHours = difference / (60 * 60 * 1000) % 24;
+
+						difh = (int)diffHours;
+						difm = (int)diffMinutes;
+						difs = (int)diffSeconds;
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					caltime3 = String.valueOf(difh + ":" + difm + ":" + difs);
 					
 					g.drawLine(x4, 0, x4, this.getHeight());
 					g.drawString("Video End", x4+5, this.getHeight()/4-140);
-					
+					g.drawString(caltime3, x4+5, this.getHeight()/4*2);
 					String time_temp[] = Data.nor_pupildata.get(count).timestamp.split(":|\\.", -1);
 					String time_text_end = String.valueOf(time_temp[1])+"min "+String.valueOf(time_temp[2])+"sec "+String.valueOf(time_temp[3]);
 					g.drawString(time_text_end, x4+5, this.getHeight()/4-120);
@@ -197,27 +298,36 @@ public class Drawing extends JFrame {
 					
 					if(Integer.valueOf(Data.min) == Integer.valueOf(Data.time_check[1])+1 && mdraw == 0) {
 						g2.draw(new Line2D.Float(x2, y2, x4, y4));
-						g.drawString(Data.min + "min", x2+5, this.getHeight()/4*2);
-						g.drawString("Left : " + String.valueOf(Data.nor_pupildata.get(count).left), x2+5, this.getHeight()/4*2 - 40);
-						g.drawString("Right : " + String.valueOf(Data.nor_pupildata.get(count).right), x2+5, this.getHeight()/4*2 + 40);
+						g.drawString(Data.min + "min", x2+5, this.getHeight()/4*2-20);
+						g.drawString("Left : " + String.valueOf(Data.nor_pupildata.get(count).left), x2+5, this.getHeight()/4*2-20 - 40);
+						g.drawString("Right : " + String.valueOf(Data.nor_pupildata.get(count).right), x2+5, this.getHeight()/4*2-20 + 40);
 						mdraw++;
+						if(sdraw == 0) {
+							sdraw++;
+						}
 					} else if(Integer.valueOf(Data.min) == Integer.valueOf(Data.time_check[1])+2 && mdraw == 1) {
 						g2.draw(new Line2D.Float(x2, y2, x4, y4));
-						g.drawString(Data.min + "min", x2+5, this.getHeight()/4*2);
-						g.drawString(String.valueOf(Data.nor_pupildata.get(count).left), x2+5, this.getHeight()/4*2 - 40);
-						g.drawString(String.valueOf(Data.nor_pupildata.get(count).right), x2+5, this.getHeight()/4*2 + 40);
+						g.drawString(Data.min + "min", x2+5, this.getHeight()/4*2-20);
+						g.drawString(String.valueOf(Data.nor_pupildata.get(count).left), x2+5, this.getHeight()/4*2-20 - 40);
+						g.drawString(String.valueOf(Data.nor_pupildata.get(count).right), x2+5, this.getHeight()/4*2-20 + 40);
 						mdraw++;
-					} else if(Integer.valueOf(Data.min) == Integer.valueOf(Data.time_check[1])+1 && Integer.valueOf(Data.sec) == 30 && sdraw == 0) {
+					} else if(Integer.valueOf(Data.min) == Integer.valueOf(Data.time_check[1]) && Integer.valueOf(Data.sec) == 30 && sdraw == 0) {
 						g2.draw(new Line2D.Float(x2, y2, x4, y4));
-						g.drawString(Data.sec + "sec", x2+5, this.getHeight()/4*2);
-						g.drawString(String.valueOf(Data.nor_pupildata.get(count).left), x2+5, this.getHeight()/4*2 - 40);
-						g.drawString(String.valueOf(Data.nor_pupildata.get(count).right), x2+5, this.getHeight()/4*2 + 40);
+						g.drawString(Data.sec + "sec", x2+5, this.getHeight()/4*2-20);
+						g.drawString(String.valueOf(Data.nor_pupildata.get(count).left), x2+5, this.getHeight()/4*2-20 - 40);
+						g.drawString(String.valueOf(Data.nor_pupildata.get(count).right), x2+5, this.getHeight()/4*2-20 + 40);
 						sdraw++;
-					} else if(Integer.valueOf(Data.min) == Integer.valueOf(Data.time_check[1])+2 && Integer.valueOf(Data.sec) == 30 && sdraw == 1) {
+					} else if(Integer.valueOf(Data.min) == Integer.valueOf(Data.time_check[1])+1 && Integer.valueOf(Data.sec) == 30 && sdraw == 1) {
 						g2.draw(new Line2D.Float(x2, y2, x4, y4));
-						g.drawString(Data.sec + "sec", x2+5, this.getHeight()/4*2);
-						g.drawString(String.valueOf(Data.nor_pupildata.get(count).left), x2+5, this.getHeight()/4*2 - 40);
-						g.drawString(String.valueOf(Data.nor_pupildata.get(count).right), x2+5, this.getHeight()/4*2 + 40);
+						g.drawString(Data.sec + "sec", x2+5, this.getHeight()/4*2-20);
+						g.drawString(String.valueOf(Data.nor_pupildata.get(count).left), x2+5, this.getHeight()/4*2-20 - 40);
+						g.drawString(String.valueOf(Data.nor_pupildata.get(count).right), x2+5, this.getHeight()/4*2-20 + 40);
+						sdraw++;
+					} else if(Integer.valueOf(Data.min) == Integer.valueOf(Data.time_check[1])+2 && Integer.valueOf(Data.sec) == 30 && sdraw == 2) {
+						g2.draw(new Line2D.Float(x2, y2, x4, y4));
+						g.drawString(Data.sec + "sec", x2+5, this.getHeight()/4*2-20);
+						g.drawString(String.valueOf(Data.nor_pupildata.get(count).left), x2+5, this.getHeight()/4*2-20 - 40);
+						g.drawString(String.valueOf(Data.nor_pupildata.get(count).right), x2+5, this.getHeight()/4*2-20 + 40);
 						sdraw++;
 					}
 				}
