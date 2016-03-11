@@ -45,6 +45,10 @@ public class Data {
 	public static String log_video_time_end;
 	public static String overall_time_start;
 	public static String overall_time_end;
+	public static String log_video_recording_start_time;
+	public static String log_video_recording_stop_time;
+	public static String ac_log_video_recording_start_time;
+	public static String ac_log_video_recording_stop_time;
 	
 	public static int currentPoint2 = 0;
 	

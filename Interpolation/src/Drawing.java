@@ -86,6 +86,8 @@ public class Drawing extends JFrame {
 					g.drawString("Mean of Normalized Left Pupil : "+ String.valueOf(Data.left_nor_data_mean), 25, this.getHeight()/4-220);
 					g.drawString("Left Data Loss Rate (Overall) : "+ String.valueOf(Data.left_loss_rate) + "%", 25, this.getHeight()/4-200);
 					g.drawString("Left Data Loss Rate (Video) : "+ String.valueOf(Data.left_data_loss_rate_during_video_play) + "%", 25, this.getHeight()/4-180);
+					
+					g.drawString("Start time : "+ String.valueOf(Data.overall_time_start), 25, this.getHeight()/4-140);
 				}
 								
 				int x3 = Math.round((float)(count - 1) * 1890 /((float) Data.nor_pupildata.size()) + 20);
@@ -102,18 +104,39 @@ public class Drawing extends JFrame {
 				}
 				g2.draw(new Line2D.Float(x3, y3, x4, y4));
 				
+				g.setColor(Color.BLUE);
+				if(Data.nor_pupildata.get(count).timestamp.equalsIgnoreCase(Data.ac_log_video_recording_start_time)) {
+					String caltime1 = null;
+					String[] temp_real = String.valueOf(Data.ac_log_video_recording_start_time).split(" ", -1);
+					String[] starttime = temp_real[1].split(":|\\.", -1);
+					
+					caltime1 = String.valueOf((Integer.valueOf(Data.time.get(count).hour) - Integer.valueOf(starttime[0])) + ":" 
+											+ (Integer.valueOf(Data.time.get(count).minute) - Integer.valueOf(starttime[1])) + ":"
+											+ (Integer.valueOf(Data.time.get(count).second) - Integer.valueOf(starttime[2])) + "."
+											+ (Integer.valueOf(Data.time.get(count).pointsec) - Integer.valueOf(starttime[3])));
+					
+					g.drawString("Video recording start time", x4, this.getHeight()/4*2-20);
+					g.drawString(caltime1, x4, this.getHeight()/4*2);
+					g.drawLine(x4, 0, x4, this.getHeight());
+					g.drawLine(0, this.getHeight()/4*3-280, this.getWidth(), this.getHeight()/4*3-280);
+				}
+				if(Data.nor_pupildata.get(count).timestamp.equalsIgnoreCase(Data.ac_log_video_recording_stop_time)) {
+					String caltime4 = null;
+					String[] temp_real = String.valueOf(Data.ac_log_video_recording_start_time).split(" ", -1);
+					String[] starttime = temp_real[1].split(":|\\.", -1);
+					
+					caltime4 = String.valueOf((Integer.valueOf(Data.time.get(count).hour) - Integer.valueOf(starttime[0])) + ":" 
+											+ (Integer.valueOf(Data.time.get(count).minute) - Integer.valueOf(starttime[1])) + ":"
+											+ (Integer.valueOf(Data.time.get(count).second) - Integer.valueOf(starttime[2])) + "."
+											+ (Integer.valueOf(Data.time.get(count).pointsec) - Integer.valueOf(starttime[3])));
+					g.drawString("Video recording end time", x4-180, this.getHeight()/4*2-20);
+					g.drawString(caltime4, x4-180, this.getHeight()/4*2);
+					g.drawLine(x4, 0, x4, this.getHeight());
+				}
+				
+				
 				g.setColor(Color.RED);
 				if(count == 1) {
-					String caltime1 = null;
-					String[] starttime = String.valueOf(Data.overall_time_start).split(":|\\.", -1);
-					
-					caltime1 = String.valueOf((Integer.valueOf(Data.time.get(count-1).hour) - Integer.valueOf(starttime[0])) + ":" 
-											+ (Integer.valueOf(Data.time.get(count-1).minute) - Integer.valueOf(starttime[1])) + ":"
-											+ (Integer.valueOf(Data.time.get(count-1).second) - Integer.valueOf(starttime[2])) + "."
-											+ (Integer.valueOf(Data.time.get(count-1).pointsec) - Integer.valueOf(starttime[3])));
-					
-					g.drawString(caltime1, 25, this.getHeight()/4*3-280);
-					g.drawString("Start time : "+ String.valueOf(Data.overall_time_start), 25, this.getHeight()/4*3-260);
 					g.drawString("Mean of Right Pupil : "+ String.valueOf(Data.pupil_mean_right), 25, this.getHeight()/4*3-240);
 					g.drawString("Mean of Normalized Right Pupil : "+ String.valueOf(Data.right_nor_data_mean), 25, this.getHeight()/4*3-220);
 					g.drawString("Right Data Loss Rate (Overall) : "+ String.valueOf(Data.right_loss_rate) + "%", 25, this.getHeight()/4*3-200);
@@ -121,21 +144,21 @@ public class Drawing extends JFrame {
 				}
 				if(Data.nor_pupildata.get(count).timestamp.equalsIgnoreCase(Data.log_video_time_start)) {
 					
-					String caltime2 = null;
-					String[] starttime = String.valueOf(Data.overall_time_start).split(":|\\.", -1);
-					
-					caltime2 = String.valueOf((Integer.valueOf(Data.time.get(count).hour) - Integer.valueOf(starttime[0])) + ":" 
-											+ (Integer.valueOf(Data.time.get(count).minute) - Integer.valueOf(starttime[1])) + ":"
-											+ (Integer.valueOf(Data.time.get(count).second) - Integer.valueOf(starttime[2])) + "."
-											+ (Integer.valueOf(Data.time.get(count).pointsec) - Integer.valueOf(starttime[3])));
-					g.drawString(caltime2, x2+5, this.getHeight()/4*2);
+//					String caltime2 = null;
+//					String[] starttime = String.valueOf(Data.overall_time_start).split(":|\\.", -1);
+//					
+//					caltime2 = String.valueOf((Integer.valueOf(Data.time.get(count).hour) - Integer.valueOf(starttime[0])) + ":" 
+//											+ (Integer.valueOf(Data.time.get(count).minute) - Integer.valueOf(starttime[1])) + ":"
+//											+ (Integer.valueOf(Data.time.get(count).second) - Integer.valueOf(starttime[2])) + "."
+//											+ (Integer.valueOf(Data.time.get(count).pointsec) - Integer.valueOf(starttime[3])));
+//					g.drawString(caltime2, x2+5, this.getHeight()/4*2);
 					
 					g.drawLine(x4, 0, x4, this.getHeight());
-					g.drawString("Video Start", x4+5, this.getHeight()/4 - 200);
+					g.drawString("Video Start", x4+5, this.getHeight()/4-140);
 					
 					String time_temp[] = Data.nor_pupildata.get(count).timestamp.split(":|\\.", -1);
 					String time_text_start = String.valueOf(time_temp[1])+"min "+String.valueOf(time_temp[2])+"sec "+String.valueOf(time_temp[3]);
-					g.drawString(time_text_start, x4+5, this.getHeight()/4 - 180);
+					g.drawString(time_text_start, x4+5, this.getHeight()/4-120);
 					flag = 1;
 					
 					Data.time_check = String.valueOf(Data.nor_pupildata.get(count).timestamp).split(":|\\.", -1);
@@ -143,39 +166,29 @@ public class Drawing extends JFrame {
 				}
 				if(Data.nor_pupildata.get(count).timestamp.equalsIgnoreCase(Data.log_video_time_end)) {
 					
-					String caltime3 = null;
-					String[] starttime = String.valueOf(Data.overall_time_start).split(":|\\.", -1);
-					
-					caltime3 = String.valueOf((Integer.valueOf(Data.time.get(count).hour) - Integer.valueOf(starttime[0])) + ":" 
-											+ (Integer.valueOf(Data.time.get(count).minute) - Integer.valueOf(starttime[1])) + ":"
-											+ (Integer.valueOf(Data.time.get(count).second) - Integer.valueOf(starttime[2])) + "."
-											+ (Integer.valueOf(Data.time.get(count).pointsec) - Integer.valueOf(starttime[3])));
-					g.drawString(caltime3, x2+5, this.getHeight()/4*2);
+//					String caltime3 = null;
+//					String[] starttime = String.valueOf(Data.overall_time_start).split(":|\\.", -1);
+//					
+//					caltime3 = String.valueOf((Integer.valueOf(Data.time.get(count).hour) - Integer.valueOf(starttime[0])) + ":" 
+//											+ (Integer.valueOf(Data.time.get(count).minute) - Integer.valueOf(starttime[1])) + ":"
+//											+ (Integer.valueOf(Data.time.get(count).second) - Integer.valueOf(starttime[2])) + "."
+//											+ (Integer.valueOf(Data.time.get(count).pointsec) - Integer.valueOf(starttime[3])));
+//					g.drawString(caltime3, x2+5, this.getHeight()/4*2);
 					
 					g.drawLine(x4, 0, x4, this.getHeight());
-					g.drawString("Video End", x4+5, this.getHeight()/4 - 200);
+					g.drawString("Video End", x4+5, this.getHeight()/4-140);
 					
 					String time_temp[] = Data.nor_pupildata.get(count).timestamp.split(":|\\.", -1);
 					String time_text_end = String.valueOf(time_temp[1])+"min "+String.valueOf(time_temp[2])+"sec "+String.valueOf(time_temp[3]);
-					g.drawString(time_text_end, x4+5, this.getHeight()/4 - 180);
+					g.drawString(time_text_end, x4+5, this.getHeight()/4-120);
 					flag = 0;
 				}
 				if(count == Data.nor_pupildata.size()-1) {
-					
-					String caltime4 = null;
-					String[] starttime = String.valueOf(Data.overall_time_start).split(":|\\.", -1);
-					
-					caltime4 = String.valueOf((Integer.valueOf(Data.time.get(count).hour) - Integer.valueOf(starttime[0])) + ":" 
-											+ (Integer.valueOf(Data.time.get(count).minute) - Integer.valueOf(starttime[1])) + ":"
-											+ (Integer.valueOf(Data.time.get(count).second) - Integer.valueOf(starttime[2])) + "."
-											+ (Integer.valueOf(Data.time.get(count).pointsec) - Integer.valueOf(starttime[3])));
-					g.drawString(caltime4, this.getWidth()-150, this.getHeight()/4*2-20);
-					
-					g.drawString("End time : "+ String.valueOf(Data.overall_time_end), this.getWidth()-150, this.getHeight()/4*2);
+					g.drawString("End time : "+ String.valueOf(Data.overall_time_end), this.getWidth()-150, this.getHeight()/4-140);
 					g.drawLine(x4, 0, x4, this.getHeight());
 				}
-				g.setColor(Color.BLACK);
 				
+				g.setColor(Color.BLACK);
 				if(flag == 1) {
 					Data.temp_time_check = String.valueOf(Data.nor_pupildata.get(count).timestamp).split(":|\\.", -1);
 					Data.min = Data.temp_time_check[1];
