@@ -138,50 +138,50 @@ public class Interpolate {
 		frame.getContentPane().add(Window_Size_TextField);
 		Window_Size_TextField.setColumns(10);
 //----------------------------------------------------------------------------------------//	
-		JButton method3 = new JButton("Interpolate  >  Normalize  >  Window Size");
-		method3.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				interpolate();
-				normalize();
-				windowflag = 3;
-				windowsize();
-			}			
-		});
-		
-		method3.setBounds(15, 215, 315, 25);
-		frame.getContentPane().add(method3);
+//		JButton method3 = new JButton("Interpolate  >  Normalize  >  Window Size");
+//		method3.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent arg0) {
+//				interpolate();
+//				normalize();
+//				windowflag = 3;
+//				windowsize();
+//			}			
+//		});
+//		
+//		method3.setBounds(15, 215, 315, 25);
+//		frame.getContentPane().add(method3);
 //----------------------------------------------------------------------------------------//
-		JButton method2 = new JButton("Interpolate  >  Window Size  >  Normalize");
-		method2.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				interpolate();
-				windowflag = 2;
-				windowsize();
-				normalize();
-			}			
-		});
-		
-		method2.setBounds(15, 255, 315, 25);
-		frame.getContentPane().add(method2);
+//		JButton method2 = new JButton("Interpolate  >  Window Size  >  Normalize");
+//		method2.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent arg0) {
+//				interpolate();
+//				windowflag = 2;
+//				windowsize();
+//				normalize();
+//			}			
+//		});
+//		
+//		method2.setBounds(15, 255, 315, 25);
+//		frame.getContentPane().add(method2);
 //----------------------------------------------------------------------------------------//
-		JButton method1 = new JButton("Window Size  >  Interpolate  >  Normalize");
-		method1.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				windowflag = 1;
-				windowsize();
-				interpolate();
-				normalize();
-			}			
-		});
-		
-		method1.setBounds(15, 295, 315, 25);
-		frame.getContentPane().add(method1);
+//		JButton method1 = new JButton("Window Size  >  Interpolate  >  Normalize");
+//		method1.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent arg0) {
+//				windowflag = 1;
+//				windowsize();
+//				interpolate();
+//				normalize();
+//			}			
+//		});
+//		
+//		method1.setBounds(15, 295, 315, 25);
+//		frame.getContentPane().add(method1);
 //----------------------------------------------------------------------------------------//
 		JButton graph_w = new JButton("Window Graph");
 		graph_w.addActionListener(new ActionListener() {
@@ -573,8 +573,50 @@ public class Interpolate {
 		});
 		organize.setBounds(15, 175, 150, 25);
 		frame.getContentPane().add(organize);
-	}
 //----------------------------------------------------------------------------------------//	
+		JButton winorganize = new JButton("Window Organize");
+		winorganize.addActionListener(new ActionListener() {
+
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				interpolate();
+				normalize();
+				windowflag = 3;
+				windowsize();
+				
+				try {
+				// TODO Auto-generated method stub
+				JFileChooser JFC = new JFileChooser("/Users/Administrator/Desktop");
+				JFC.setSelectedFile(new File("RMK_WIN_" + Data.location[5]));
+				int interval = JFC.showSaveDialog(null);
+				
+				//data writing
+					if (interval == JFileChooser.APPROVE_OPTION) {
+						FileWriter fw = new FileWriter(JFC.getSelectedFile() + ".csv");
+						
+							for(int count = 0; count <= Data.original_for_write.size(); count++) {
+								if(count == 0) {
+									fw.write("avgX" + ","
+											+ "avgY" + ","
+											+ "timestamp" + "\n");
+									} else {
+										fw.write(String.valueOf(Data.original_for_write.get(count-1).avgX) + ","
+												+ String.valueOf(Data.original_for_write.get(count-1).avgY) + ","
+												+ String.valueOf(Data.original_for_write.get(count-1).timestamp) + "\n");
+									}
+							}
+						fw.close();
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		winorganize.setBounds(15, 255, 150, 25);
+		frame.getContentPane().add(winorganize);
+	}
+//----------------------------------------------------------------------------------------//
 	private void analyze(File inputFile) {
 		//copy specific data into memory
 		try{
@@ -588,7 +630,6 @@ public class Interpolate {
 			Data.file_name = inputFile.getName();
 			int count = 0;
 			
-			
 			for(String temp : Data.original) {
 				String[] temps = temp.split(",", -1);
 				//(value - mean) / sd)
@@ -599,6 +640,8 @@ public class Interpolate {
 							p.left = Float.valueOf(temps[12]);
 							p.right = Float.valueOf(temps[19]);
 							p.timestamp = temps[24];
+							p.avgX = Float.valueOf(temps[3]);
+							p.avgY = Float.valueOf(temps[4]);
 							Data.pupildata.add(p);
 
 							Pupil pt = new Pupil();
@@ -966,11 +1009,110 @@ public class Interpolate {
 	}
 //----------------------------------------------------------------------------------------//
 	public void windowsize(){
+		int dif_min = 50;
+		int dif_min2 = 50;
+		int dif_min3 = 50;
+		int dif_min4 = 50;
+		
+		//get exact time of start/end point of video
+		for(int count = 0; count < Data.pupildata.size(); count++) {
+			String tmp1 = String.valueOf(Data.pupildata.get(count).timestamp);
+			String tmp3 = String.valueOf(Data.log_video_time.get(1));
+			String tmp4 = String.valueOf(Data.log_video_recording_start_time);
+			String tmp5 = String.valueOf(Data.log_video_recording_stop_time);
+			String tmp2 = Data.log_timestamp;
+			String[] temps4 = tmp1.split(" ", -1);
+			String[] dtime = temps4[1].split(":|\\.", -1);
+			String[] temps5 = tmp2.split(":", -1);
+			String[] log_video_end = tmp3.split(":", -1);
+			String[] log_video_rec_start = tmp4.split(":", -1);
+			String[] log_video_rec_stop = tmp5.split(":", -1);
+			
+			//save original time stamp
+			if(count == 0) {
+				Data.overall_time_start = String.valueOf(temps4[1]);
+			} else if(count == Data.pupildata.size()-1) {
+				Data.overall_time_end = String.valueOf(temps4[1]);
+			}
+			
+			Time t = new Time();
+			t.hour = dtime[0];
+			t.minute = dtime[1];
+			t.second = dtime[2];
+			t.pointsec = dtime[3];
+			Data.time.add(t);
+			
+			if(dtime[0].equals(temps5[0]) == true && dtime[1].equals(temps5[1]) == true && dtime[2].equals(temps5[2]) == true) {
+				
+				int result = Math.abs(Integer.valueOf(dtime[3]) - Integer.valueOf(temps5[3]));
+				if(result <= dif_min) {
+					dif_min = result;
+					Data.log_video_time_start = Data.pupildata.get(count).timestamp;
+				}
+			} else if(dtime[0].equals(log_video_end[0]) == true && dtime[1].equals(log_video_end[1]) == true && dtime[2].equals(log_video_end[2]) == true){
+				
+				int result2 = Math.abs(Integer.valueOf(dtime[3]) - Integer.valueOf(log_video_end[3]));
+				if(result2 <= dif_min2) {
+					dif_min2 = result2;
+					Data.log_video_time_end = Data.pupildata.get(count).timestamp;
+				}
+			} else if(dtime[0].equals(log_video_rec_start[0]) == true && dtime[1].equals(log_video_rec_start[1]) == true && dtime[2].equals(log_video_rec_start[2]) == true){
+				
+				int result3 = Math.abs(Integer.valueOf(dtime[3]) - Integer.valueOf(log_video_rec_start[3]));
+				if(result3 <= dif_min3) {
+					dif_min3 = result3;
+					Data.ac_log_video_recording_start_time = Data.pupildata.get(count).timestamp;
+				}
+			} else if(dtime[0].equals(log_video_rec_stop[0]) == true && dtime[1].equals(log_video_rec_stop[1]) == true && dtime[2].equals(log_video_rec_stop[2]) == true){
+				
+				int result4 = Math.abs(Integer.valueOf(dtime[3]) - Integer.valueOf(log_video_rec_stop[3]));
+				if(result4 <= dif_min4) {
+					dif_min4 = result4;
+					Data.ac_log_video_recording_stop_time = Data.pupildata.get(count).timestamp;
+				}
+			}
+		}
+		int flag = 0;
+		for(int i = 0; i < Data.nor_pupildata.size(); i++){
+			if(Data.nor_pupildata.get(i).timestamp.equalsIgnoreCase(Data.log_video_time_start)){
+				flag = 1;
+			}
+			if(Data.nor_pupildata.get(i).timestamp.equalsIgnoreCase(Data.log_video_time_end)){
+				flag = 2;
+			}
+			if(flag == 1) {
+				Npupil temp = new Npupil();
+				temp.left = Data.nor_pupildata.get(i).left;
+				temp.right = Data.nor_pupildata.get(i).right;
+				Data.normal_inter_data_for_write.add(temp);
+				
+				Pupil temp2 = new Pupil();
+				temp2.avgX = Data.pupildata.get(i).avgX;
+				temp2.avgY = Data.pupildata.get(i).avgY;
+				temp2.timestamp = Data.pupildata.get(i).timestamp;
+				Data.original_for_write.add(temp2);
+			} 
+			if(flag == 2) {
+				Npupil temp = new Npupil();
+				temp.left = Data.nor_pupildata.get(i).left;
+				temp.right = Data.nor_pupildata.get(i).right;
+				Data.normal_inter_data_for_write.add(temp);
+				
+				Pupil temp2 = new Pupil();
+				temp2.avgX = Data.pupildata.get(i).avgX;
+				temp2.avgY = Data.pupildata.get(i).avgY;
+				temp2.timestamp = Data.pupildata.get(i).timestamp;
+				Data.original_for_write.add(temp2);
+				
+				flag = 3;
+			}
+		}
+		
 		if(windowflag == 3) {
 			float temp_window_pupil_mean_left = 0;
 			float temp_window_pupil_mean_right = 0;
 			int window_size_input = Integer.valueOf(Window_Size_TextField.getText()) * 30;
-			int array_size = ((int)(Data.nor_pupildata.size()/window_size_input)) + 1;
+			int array_size = ((int)(Data.normal_inter_data_for_write.size()/window_size_input)) + 1;
 			
 			float[][] temp2 = new float[array_size][window_size_input];
 			float[][] temp3 = new float[array_size][window_size_input];
@@ -978,7 +1120,7 @@ public class Interpolate {
 			int i = 0;
 			int j = 0;
 			
-			for(Npupil temp : Data.nor_pupildata) {	
+			for(Npupil temp : Data.normal_inter_data_for_write) {	
 				temp2[i][j] = temp.left;
 				temp3[i][j] = temp.right;
 				j++;

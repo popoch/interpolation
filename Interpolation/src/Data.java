@@ -16,6 +16,8 @@ public class Data {
 	public static ArrayList<Pupil> interpolate_R = new ArrayList<Pupil>();
 	public static ArrayList<PointR> inter_result_R = new ArrayList<PointR>();
 	public static ArrayList<PointR> inter_calcul_R = new ArrayList<PointR>();
+	public static ArrayList<Pupil> original_for_write = new ArrayList<Pupil>();
+	public static ArrayList<Npupil> normal_inter_data_for_write = new ArrayList<Npupil>();
 	
 	public static String file_name;
 	public static int left_loss;

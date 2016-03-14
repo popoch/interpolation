@@ -9,6 +9,9 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.geom.Line2D;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class Drawing2 extends JFrame {
@@ -85,9 +88,6 @@ public class Drawing2 extends JFrame {
 				if(count == 1) {
 					g.drawString("Mean of Left Pupil : "+ String.valueOf(Data.window_pupil_mean_left), 25, this.getHeight()/4-240);
 					g.drawString("Window Size : "+ String.valueOf(Data.window_size), 25, this.getHeight()/4-220);
-					//g.drawString("Mean of Normalized Left Pupil : "+ String.valueOf(Data.left_nor_data_mean), 25, this.getHeight()/4-220);
-					g.drawString("Left Data Loss Rate (Overall) : "+ String.valueOf(Data.left_loss_rate) + "%", 25, this.getHeight()/4-200);
-					g.drawString("Left Data Loss Rate (Video) : "+ String.valueOf(Data.left_data_loss_rate_during_video_play) + "%", 25, this.getHeight()/4-180);
 				}
 								
 				int x3 = Math.round((float)(count - 1) * 1890 /((float) Data.window_normal_inter_data.size()) + 20);
@@ -108,48 +108,47 @@ public class Drawing2 extends JFrame {
 				if(count == 1) {
 					g.drawString("Mean of Right Pupil : "+ String.valueOf(Data.window_pupil_mean_right), 25, this.getHeight()/4*3-240);
 					g.drawString("Window Size : "+ String.valueOf(Data.window_size), 25, this.getHeight()/4*3-220);
-					//g.drawString("Mean of Normalized Right Pupil : "+ String.valueOf(Data.right_nor_data_mean), 25, this.getHeight()/4*3-220);
-					g.drawString("Right Data Loss Rate (Overall) : "+ String.valueOf(Data.right_loss_rate) + "%", 25, this.getHeight()/4*3-200);
-					g.drawString("Right Data Loss Rate (Video) : "+ String.valueOf(Data.right_data_loss_rate_during_video_play) + "%", 25, this.getHeight()/4*3-180);
 				}
 				
 				if(count == Data.window_normal_inter_data.size()-1) {
 					g.drawLine(x4, 0, x4, this.getHeight());
 				}
-				g.setColor(Color.BLACK);
 				
-				if(flag == 1) {
-					Data.temp_time_check = String.valueOf(Data.nor_pupildata.get(count).timestamp).split(":|\\.", -1);
-					Data.min = Data.temp_time_check[1];
-					Data.sec = Data.temp_time_check[2];
-					Data.point_sec = Data.temp_time_check[3];
+				g.setColor(Color.BLACK);
+				if() {
+					String caltime2 = null;
+					String[] temp_real = String.valueOf(Data.ac_log_video_recording_start_time).split(" ", -1);
+					String[] starttime = temp_real[1].split("\\.", -1);
+					String time1 = starttime[0];
+					String[] temp_real2 = String.valueOf(Data.nor_pupildata.get(count).timestamp).split(" ", -1);
+					String[] tmptime = temp_real2[1].split("\\.", -1);
+					String time2 = tmptime[0];
+					int difh = 0;
+					int difm = 0;
+					int difs = 0;
 					
-					if(Integer.valueOf(Data.min) == Integer.valueOf(Data.time_check[1])+1 && mdraw == 0) {
-						g2.draw(new Line2D.Float(x2, y2, x4, y4));
-						g.drawString(Data.min + "min", x2+5, this.getHeight()/4*2);
-						g.drawString("Left : " + String.valueOf(Data.nor_pupildata.get(count).left), x2+5, this.getHeight()/4*2 - 40);
-						g.drawString("Right : " + String.valueOf(Data.nor_pupildata.get(count).right), x2+5, this.getHeight()/4*2 + 40);
-						mdraw++;
-					} else if(Integer.valueOf(Data.min) == Integer.valueOf(Data.time_check[1])+2 && mdraw == 1) {
-						g2.draw(new Line2D.Float(x2, y2, x4, y4));
-						g.drawString(Data.min + "min", x2+5, this.getHeight()/4*2);
-						g.drawString(String.valueOf(Data.nor_pupildata.get(count).left), x2+5, this.getHeight()/4*2 - 40);
-						g.drawString(String.valueOf(Data.nor_pupildata.get(count).right), x2+5, this.getHeight()/4*2 + 40);
-						mdraw++;
-					} else if(Integer.valueOf(Data.min) == Integer.valueOf(Data.time_check[1])+1 && Integer.valueOf(Data.sec) == 30 && sdraw == 0) {
-						g2.draw(new Line2D.Float(x2, y2, x4, y4));
-						g.drawString(Data.sec + "sec", x2+5, this.getHeight()/4*2);
-						g.drawString(String.valueOf(Data.nor_pupildata.get(count).left), x2+5, this.getHeight()/4*2 - 40);
-						g.drawString(String.valueOf(Data.nor_pupildata.get(count).right), x2+5, this.getHeight()/4*2 + 40);
-						sdraw++;
-					} else if(Integer.valueOf(Data.min) == Integer.valueOf(Data.time_check[1])+2 && Integer.valueOf(Data.sec) == 30 && sdraw == 1) {
-						g2.draw(new Line2D.Float(x2, y2, x4, y4));
-						g.drawString(Data.sec + "sec", x2+5, this.getHeight()/4*2);
-						g.drawString(String.valueOf(Data.nor_pupildata.get(count).left), x2+5, this.getHeight()/4*2 - 40);
-						g.drawString(String.valueOf(Data.nor_pupildata.get(count).right), x2+5, this.getHeight()/4*2 + 40);
-						sdraw++;
+					SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+					Date date1;
+					Date date2;
+					try {
+						date1 = format.parse(time1);
+						date2 = format.parse(time2);
+						long difference = date2.getTime() - date1.getTime(); 
+
+						long diffSeconds = difference / 1000 % 60;
+						long diffMinutes = difference / (60 * 1000) % 60;
+						long diffHours = difference / (60 * 60 * 1000) % 24;
+
+						difh = (int)diffHours;
+						difm = (int)diffMinutes;
+						difs = (int)diffSeconds;
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
+					caltime2 = String.valueOf(difh + ":" + difm + ":" + difs);
 				}
+				
 			}
 		}
 	}
