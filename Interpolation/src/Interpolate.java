@@ -595,17 +595,27 @@ public class Interpolate {
 					if (interval == JFileChooser.APPROVE_OPTION) {
 						FileWriter fw = new FileWriter(JFC.getSelectedFile() + ".csv");
 						
-							for(int count = 0; count <= Data.original_for_write.size(); count++) {
-								if(count == 0) {
-									fw.write("avgX" + ","
-											+ "avgY" + ","
-											+ "timestamp" + "\n");
-									} else {
-										fw.write(String.valueOf(Data.original_for_write.get(count-1).avgX) + ","
-												+ String.valueOf(Data.original_for_write.get(count-1).avgY) + ","
-												+ String.valueOf(Data.original_for_write.get(count-1).timestamp) + "\n");
-									}
-							}
+//							for(int count = 0; count <= Data.original_for_write.size(); count++) {
+//								if(count == 0) {
+//									fw.write("avgX" + ","
+//											+ "avgY" + ","
+//											+ "timestamp" + "\n");
+//									} else {
+//										fw.write(String.valueOf(Data.original_for_write.get(count-1).avgX) + ","
+//												+ String.valueOf(Data.original_for_write.get(count-1).avgY) + ","
+//												+ String.valueOf(Data.original_for_write.get(count-1).timestamp) + "\n");
+//									}
+//							}
+						
+						for(int count = 0; count <= Data.window_normal_inter_data.size(); count++) {
+							if(count == 0) {
+								fw.write("Left" + ","
+										+ "Right" + "\n");
+								} else {
+									fw.write(String.valueOf(Data.window_normal_inter_data.get(count-1).left) + ","
+											+ String.valueOf(Data.window_normal_inter_data.get(count-1).right) + "\n");
+								}
+						}
 						fw.close();
 					}
 				} catch (IOException e) {
@@ -1084,6 +1094,7 @@ public class Interpolate {
 				Npupil temp = new Npupil();
 				temp.left = Data.nor_pupildata.get(i).left;
 				temp.right = Data.nor_pupildata.get(i).right;
+				temp.timestamp = Data.nor_pupildata.get(i).timestamp;
 				Data.normal_inter_data_for_write.add(temp);
 				
 				Pupil temp2 = new Pupil();
@@ -1096,6 +1107,7 @@ public class Interpolate {
 				Npupil temp = new Npupil();
 				temp.left = Data.nor_pupildata.get(i).left;
 				temp.right = Data.nor_pupildata.get(i).right;
+				temp.timestamp = Data.nor_pupildata.get(i).timestamp;
 				Data.normal_inter_data_for_write.add(temp);
 				
 				Pupil temp2 = new Pupil();
@@ -1147,6 +1159,7 @@ public class Interpolate {
 			
 				temp_data.left = window_left / (float)window_size_input;
 				temp_data.right = window_right / (float)window_size_input;
+				
 				Data.window_normal_inter_data.add(temp_data);
 			}
 			
