@@ -5,4 +5,5 @@ public class Pupil {
 	public String timestamp;
 	public float avgX;
 	public float avgY;
+	public long time;
 }

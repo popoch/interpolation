@@ -603,7 +603,7 @@ public class Interpolate {
 									} else {
 										fw.write(String.valueOf(Data.original_for_write.get(count-1).avgX) + ","
 												+ String.valueOf(Data.original_for_write.get(count-1).avgY) + ","
-												+ String.valueOf(Data.original_for_write.get(count-1).timestamp) + "\n");
+												+ String.valueOf(Data.original_for_write.get(count-1).time) + "\n");
 									}
 							}
 						
@@ -652,6 +652,7 @@ public class Interpolate {
 							p.timestamp = temps[24];
 							p.avgX = Float.valueOf(temps[3]);
 							p.avgY = Float.valueOf(temps[4]);
+							p.time = Long.valueOf(temps[23]);
 							Data.pupildata.add(p);
 
 							Pupil pt = new Pupil();
@@ -999,6 +1000,7 @@ public class Interpolate {
 				np.left = (Float.valueOf(Data.pupildata.get(count2).left) - Data.pupil_mean_left) / Data.pupil_sd_left;
 				np.right = (Float.valueOf(Data.pupildata.get(count2).right) - Data.pupil_mean_right) / Data.pupil_sd_right;
 				np.timestamp = String.valueOf(Data.pupildata.get(count2).timestamp);
+				np.time = Float.valueOf(Data.pupildata.get(count2).time);
 				Data.nor_pupildata.add(np);
 			}
 			
@@ -1101,6 +1103,7 @@ public class Interpolate {
 				temp2.avgX = Data.pupildata.get(i).avgX;
 				temp2.avgY = Data.pupildata.get(i).avgY;
 				temp2.timestamp = Data.pupildata.get(i).timestamp;
+				temp2.time = Data.pupildata.get(i).time;
 				Data.original_for_write.add(temp2);
 			} 
 			if(flag == 2) {
@@ -1114,6 +1117,7 @@ public class Interpolate {
 				temp2.avgX = Data.pupildata.get(i).avgX;
 				temp2.avgY = Data.pupildata.get(i).avgY;
 				temp2.timestamp = Data.pupildata.get(i).timestamp;
+				temp2.time = Data.pupildata.get(i).time;
 				Data.original_for_write.add(temp2);
 				
 				flag = 3;
